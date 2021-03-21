@@ -38,30 +38,36 @@ int main(int argc, char const *argv[]) {
     cout << i << ": [" << K[i] << " | " << V[i] << "]" <<  endl;
   } cout << "==========================\n" << endl;
 
-  RBTree<int, string> tree;
-  tree.insert(7, "salmon");
-  tree.view(tree.getroot(), "", true);
-  tree.insert(1, "forza");
-  tree.view(tree.getroot(), "", true);
-  tree.insert(3, "mount");
-  tree.view(tree.getroot(), "", true);
-  tree.insert(4, "blade");
-  tree.view(tree.getroot(), "", true);
-  tree.insert(2, "orange");
-  tree.view(tree.getroot(), "", true);
-  tree.insert(6, "pink");
-  tree.view(tree.getroot(), "", true);
-  tree.insert(9, "purple");
-  tree.view(tree.getroot(), "", true);
-
+  RBTree<int, string> tree0(K, V, 15);
 
   cout << "==========================\n" << endl;
 
-  // RBTree<int, string> tree0(K, V, 15);
+  tree0.view(tree0.getroot(), "", true);
 
   cout << "==========================\n" << endl;
 
-  // tree0.view(tree0.getroot(), "", true);
+  RBTree<int, string> tree1(tree0);
+
+  tree1.view(tree1.getroot(), "", true);
+
+  cout << "==========================\n" << endl;
+
+  RBTree<int, string> tree2;
+  tree2.insert(7, "salmon");
+  tree2.insert(1, "forza");
+  tree2.insert(3, "mount");
+  tree2.insert(4, "blade");
+  tree2.insert(2, "orange");
+  tree2.insert(6, "pink");
+  tree2.insert(9, "purple");
+
+  tree2.view(tree2.getroot(), "", true);
+
+  cout << "==========================\n" << endl;
+
+  tree2 = tree1;
+
+  tree2.view(tree2.getroot(), "", true);
 
   cout << "==========================\n" << endl;
 

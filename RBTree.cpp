@@ -88,29 +88,28 @@ template <typename keyT, typename valT>
 class RBTree {
   struct RBNode<keyT, valT> *root;
   int count;
-  void mkRoot();
-  RBNode<keyT, valT> *clone(  // makeMe
-    RBNode<keyT, valT>,
-    RBNode<keyT, valT>);
+  void mkRoot();              // working
+  void clone(                 // makeMe
+    RBNode<keyT, valT>*);
   void destroy(               // working
     RBNode<keyT, valT>*);
-  RBNode<keyT, valT> * add(   // test
+  RBNode<keyT, valT> * add(   // working
     RBNode<keyT, valT>*,
     RBNode<keyT, valT>*);
-  void fixAdd(                // test
-    RBNode<keyT, valT>*);     // test
-  void rotateL(
-    RBNode<keyT, valT>*);    // test
-  void rotateR(
-    RBNode<keyT, valT>*);    // test
+  void fixAdd(                // working
+    RBNode<keyT, valT>*);
+  void rotateL(               // working
+    RBNode<keyT, valT>*);
+  void rotateR(               // working
+    RBNode<keyT, valT>*);
 public:
   RBTree() {mkRoot();}        // working
-  RBTree(keyT*, valT*, int);  // test
+  RBTree(keyT*, valT*, int);  // working
   RBTree(RBTree&);            // makeMe
   ~RBTree() {destroy(root);}  // working
   RBTree& operator=(RBTree);  // makeMe
   valT *search(keyT);         // makeMe
-  void insert(keyT, valT);    // test
+  void insert(keyT, valT);    // working
   int remove(keyT);           // makeMe
   int rank(keyT);             // makeMe
   keyT select(int);           // makeMe
@@ -123,10 +122,10 @@ public:
   void printk(int);           // makeMe
 
 // TESTING TESTING TESTING
-  void view(
+  void view(                        // REMOVE ME !!!!!!!
     RBNode<keyT, valT>*,
     string, bool);
-  RBNode<keyT, valT> *getroot();
+  RBNode<keyT, valT> *getroot();    // REMOVE ME !!!!!!!
 };
 
 
@@ -150,17 +149,20 @@ RBTree(keyT *k, valT *v, int s) {
 template <typename keyT, typename valT>
 RBTree<keyT, valT>::
 RBTree(RBTree& src) {
-    //recursivly duplicate each node
-  this->root = clone(this->root, src.root);
+  mkRoot(); insert(src.root->key, src.root->val);
+    // recursivly duplicate each node
+  clone(src.root);
 }
 
   // Cppy Assignment Operator
 template <typename keyT, typename valT>
 RBTree<keyT, valT>& RBTree<keyT, valT>::
 operator=(RBTree src) {
-    //recursivly delete & duplicate each node
+    // recursivly delete & duplicate each node
   destroy(this->root);
-  this->root = clone(this->root, src.root);
+  mkRoot(); insert(src.root->key, src.root->val);
+  clone(src.root);
+  return *this;
 }
 
   // Find Value @ Key Location
@@ -179,7 +181,7 @@ insert(keyT k, valT v) {
       // add key/val to root
     root->key = k;
     root->val = v;
-    cout << "[" << k << " | " << v << "] added" << endl;    // TEST
+    // cout << "[" << k << " | " << v << "] added" << endl;    // TEST
     return;
   }
     // create new node
@@ -188,7 +190,7 @@ insert(keyT k, valT v) {
     // add node to tree
   RBNode<keyT, valT> *tree = root;
   root = add(node, tree);
-  cout << "[" << k << " | " << v << "] added" << endl;      // TEST
+  // cout << "[" << k << " | " << v << "] added" << endl;      // TEST
     // fix if needed
   if (node->p->red())
     fixAdd(node);
@@ -258,7 +260,7 @@ printk(int k) {
 }
 
   // Prints Tree
-template <typename keyT, typename valT>
+template <typename keyT, typename valT>                     // REMOVE ME !!!!!!!
 void RBTree<keyT, valT>::
 view(RBNode<keyT, valT> *node, string indent, bool end) {
   if (node != nullptr) {
@@ -277,8 +279,9 @@ view(RBNode<keyT, valT> *node, string indent, bool end) {
 }
 
   //Returns Root
-template <typename keyT, typename valT>
-RBNode<keyT, valT> *RBTree<keyT, valT>::getroot(){
+template <typename keyT, typename valT>                     // REMOVE ME !!!!!!!
+RBNode<keyT, valT> *RBTree<keyT, valT>::
+getroot(){
   return root;
 }
 
@@ -299,9 +302,14 @@ mkRoot() {
 
   // Recursivly Duplicates RBNodes
 template <typename keyT, typename valT>
-RBNode<keyT, valT> *RBTree<keyT, valT>::
-clone(RBNode<keyT, valT>, RBNode<keyT, valT>) {
-
+void RBTree<keyT, valT>::
+clone(RBNode<keyT, valT> *src) {
+  if (!src) return;
+  if (src->l != nullptr)
+    insert(src->l->key, src->l->val);
+  if (src->r != nullptr)
+    insert(src->r->key, src->r->val);
+  clone(src->r); clone(src->l); 
 }
 
   // Recursivly Deletes RBNodes
@@ -309,7 +317,7 @@ template <typename keyT, typename valT>
 void RBTree<keyT, valT>::
 destroy(RBNode<keyT, valT> *node) {
   if (!node) return;
-  cout << "destroying node: [" << node->key << " | " << node->val << "]" << endl;
+  // cout << "destroying node: [" << node->key << " | " << node->val << "]" << endl;
   if (node->l != nullptr) destroy(node->l);
   if (node->r != nullptr) destroy(node->r);
   delete node;
@@ -336,33 +344,33 @@ fixAdd(RBNode<keyT, valT> *node) {
   RBNode<keyT, valT> *p, *g, *u, *n;
   p = g = u = nullptr;
   n = node;
-  cout << " fixing Add()" << endl;                 //TEST
+  // cout << " fixing Add()" << endl;                 //TEST
   while (n != root && n->red() && n->p->red()){
     p = n->p; g = p->p;
     if (p == g->l) {
         // parent is left child
-        cout << "  parent is left child" << endl;   //TEST
+        // cout << "  parent is left child" << endl;   //TEST
       u = g->r;
       if (u->red()) {
           // uncle is red
-          cout << "   uncle is red" << endl;         //TEST
-          cout << "     recoloring" << endl;         //TEST
+          // cout << "   uncle is red" << endl;         //TEST
+          // cout << "     recoloring" << endl;         //TEST
         u->black = 1;
         p->black = 1;
         g->black = 0;
         n = g;
       } else {
           // uncle is black
-          cout << "   uncle is black" << endl;       //TEST
+          // cout << "   uncle is black" << endl;       //TEST
         if (n == p->r) {
             // node is right child
-            cout << "    node is right child" << endl;//TEST
+            // cout << "    node is right child" << endl;//TEST
           rotateL(p);
           n = p;
           p = n->p;
         }
         rotateR(g);
-          cout << "     swaping clors" << endl;       //TEST
+          // cout << "     swaping clors" << endl;       //TEST
         int t = p->black;
         p->black = g->black;
         g->black = t;
@@ -370,28 +378,28 @@ fixAdd(RBNode<keyT, valT> *node) {
       }
     } else {
         // parent is right child
-        cout << "  parent is right child" << endl;    //TEST
+        // cout << "  parent is right child" << endl;    //TEST
       u = g->l;
       if (u->red()) {
           // uncle is red
-          cout << "   uncle is red" << endl;          //TEST
-          cout << "     recoloring" << endl;          //TEST
+          // cout << "   uncle is red" << endl;          //TEST
+          // cout << "     recoloring" << endl;          //TEST
         u->black = 1;
         p->black = 1;
         g->black = 0;
         n = g;
       } else {
           // uncle is black
-          cout << "   uncle is black" << endl;        //TEST
+          // cout << "   uncle is black" << endl;        //TEST
         if (n == p->l) {
             // node is left child
-            cout << "    node is left child" << endl; //TEST
+            // cout << "    node is left child" << endl; //TEST
           rotateR(p);
           n = p;
           p = n->p;
         }
         rotateL(g);
-          cout << "     swaping clors" << endl;       //TEST
+          // cout << "     swaping clors" << endl;       //TEST
         int t = p->black;
         p->black = g->black;
         g->black = t;
@@ -405,19 +413,19 @@ fixAdd(RBNode<keyT, valT> *node) {
 template <typename keyT, typename valT>
 void RBTree<keyT, valT>::
 rotateL(RBNode<keyT, valT> *node) {
-    cout << "     rotating left" << endl;  //TEST
+    // cout << "     rotating left" << endl;  //TEST
   RBNode<keyT, valT> *tmp = node->r;
   node->r = tmp->l;
-  if (node->l != nullptr)
-    node->l->p = node;
+  if (node->r != nullptr)
+    node->r->p = node;
   tmp->p = node->p;
   if (node->p == nullptr)
     root = tmp;
-  else 
-    if (node == node->p->r)
-      node->p->r = tmp;
-  else node->p->l = tmp; 
-  tmp->r = node;
+  else
+    if (node == node->p->l)
+      node->p->l = tmp;
+  else node->p->r = tmp;
+  tmp->l = node;
   node->p = tmp;
 }
 
@@ -425,19 +433,19 @@ rotateL(RBNode<keyT, valT> *node) {
 template <typename keyT, typename valT>
 void RBTree<keyT, valT>::
 rotateR(RBNode<keyT, valT> *node) {
-    cout << "     rotating right" << endl; ///TEST
+    // cout << "     rotating right" << endl; ///TEST
   RBNode<keyT, valT> *tmp = node->l;
   node->l = tmp->r;
-  if (node->r != nullptr)
-    node->r->p = node;
+  if (node->l != nullptr)
+    node->l->p = node;
   tmp->p = node->p;
   if (node->p == nullptr)
     root = tmp;
-  else 
+  else
     if (node == node->p->l)
       node->p->l = tmp;
   else node->p->r = tmp;
-  tmp->l = node;
+  tmp->r = node;
   node->p = tmp;
 
 }

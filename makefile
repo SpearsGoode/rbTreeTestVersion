@@ -2,14 +2,14 @@ all: test phase2
 	@echo -e "\n		SUCCESS!!!!!!!!!!!!!!!!!	\n"
 
 phase2: test
-	# @echo -e "\n	compiling Phase2Main.cpp"
-	# @g++ Phase2Main.cpp	-Wall -std=c++17 -o phase2
-	# @echo -e "\n	Phase2Main.cpp compiled"
-	# @echo -e "\n	running phase2 \n"
-	# @echo -e "--------------------------------------------\n\n"
-	# @./phase2
-	# @echo -e "\n\n--------------------------------------------"
-	# @echo -e "\n	phase2 completed \n"
+	@echo -e "\n	compiling Phase2Main.cpp"
+	@g++ Phase2Main.cpp	-Wall -std=c++17 -o phase2
+	@echo -e "\n	Phase2Main.cpp compiled"
+	@echo -e "\n	running phase2 \n"
+	@echo -e "--------------------------------------------\n\n"
+	@./phase2
+	@echo -e "\n\n--------------------------------------------"
+	@echo -e "\n	phase2 completed \n"
 
 test: RBTree
 	@echo -e "\n	compiling RBTreeTest.cpp"
