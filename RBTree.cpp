@@ -123,10 +123,10 @@ public:
   void printk(int);           // makeMe
 
 // TESTING TESTING TESTING
-  void view(
+  void view(                        // REMOVE ME !!!!!!!
     RBNode<keyT, valT>*,
     string, bool);
-  RBNode<keyT, valT> *getroot();
+  RBNode<keyT, valT> *getroot();    // REMOVE ME !!!!!!!
 };
 
 
@@ -258,7 +258,7 @@ printk(int k) {
 }
 
   // Prints Tree
-template <typename keyT, typename valT>
+template <typename keyT, typename valT>                     // REMOVE ME !!!!!!!
 void RBTree<keyT, valT>::
 view(RBNode<keyT, valT> *node, string indent, bool end) {
   if (node != nullptr) {
@@ -277,7 +277,7 @@ view(RBNode<keyT, valT> *node, string indent, bool end) {
 }
 
   //Returns Root
-template <typename keyT, typename valT>
+template <typename keyT, typename valT>                     // REMOVE ME !!!!!!!
 RBNode<keyT, valT> *RBTree<keyT, valT>::getroot(){
   return root;
 }
@@ -413,10 +413,10 @@ rotateL(RBNode<keyT, valT> *node) {
   tmp->p = node->p;
   if (node->p == nullptr)
     root = tmp;
-  else 
+  else
     if (node == node->p->r)
       node->p->r = tmp;
-  else node->p->l = tmp; 
+  else node->p->l = tmp;
   tmp->r = node;
   node->p = tmp;
 }
@@ -433,7 +433,7 @@ rotateR(RBNode<keyT, valT> *node) {
   tmp->p = node->p;
   if (node->p == nullptr)
     root = tmp;
-  else 
+  else
     if (node == node->p->l)
       node->p->l = tmp;
   else node->p->r = tmp;
