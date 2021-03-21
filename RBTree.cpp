@@ -73,9 +73,7 @@ leaf() {
 template <typename keyT, typename valT>
 bool RBNode<keyT, valT>::
 red() {
-  if (this == nullptr)
-    return false;
-  else return !black;
+  return !black;
 }
 
 
@@ -89,11 +87,13 @@ class RBTree {
   struct RBNode<keyT, valT> *root;
   int count;
   void mkRoot();              // working
-  void clone(                 // makeMe
+  void clone(                 // working
     RBNode<keyT, valT>*);
   void destroy(               // working
     RBNode<keyT, valT>*);
-  RBNode<keyT, valT> * add(   // working
+  RBNode<keyT, valT> *find(   // working
+    RBNode<keyT, valT>*, keyT);
+  RBNode<keyT, valT> *add(    // working
     RBNode<keyT, valT>*,
     RBNode<keyT, valT>*);
   void fixAdd(                // working
@@ -105,10 +105,10 @@ class RBTree {
 public:
   RBTree() {mkRoot();}        // working
   RBTree(keyT*, valT*, int);  // working
-  RBTree(RBTree&);            // makeMe
+  RBTree(RBTree&);            // working
   ~RBTree() {destroy(root);}  // working
-  RBTree& operator=(RBTree);  // makeMe
-  valT *search(keyT);         // makeMe
+  RBTree& operator=(RBTree);  // working
+  valT *search(keyT);         // working
   void insert(keyT, valT);    // working
   int remove(keyT);           // makeMe
   int rank(keyT);             // makeMe
@@ -149,7 +149,8 @@ RBTree(keyT *k, valT *v, int s) {
 template <typename keyT, typename valT>
 RBTree<keyT, valT>::
 RBTree(RBTree& src) {
-  mkRoot(); insert(src.root->key, src.root->val);
+  mkRoot();
+  insert(src.root->key, src.root->val);
     // recursivly duplicate each node
   clone(src.root);
 }
@@ -160,7 +161,8 @@ RBTree<keyT, valT>& RBTree<keyT, valT>::
 operator=(RBTree src) {
     // recursivly delete & duplicate each node
   destroy(this->root);
-  mkRoot(); insert(src.root->key, src.root->val);
+  mkRoot();
+  insert(src.root->key, src.root->val);
   clone(src.root);
   return *this;
 }
@@ -169,7 +171,9 @@ operator=(RBTree src) {
 template <typename keyT, typename valT>
 valT* RBTree<keyT, valT>::
 search(keyT k) {
-
+  RBNode<keyT, valT> *loc = find(root, k);
+  if (loc) return &loc->val;
+  else return NULL;
 }
 
   // Insert New Node
@@ -309,7 +313,7 @@ clone(RBNode<keyT, valT> *src) {
     insert(src->l->key, src->l->val);
   if (src->r != nullptr)
     insert(src->r->key, src->r->val);
-  clone(src->r); clone(src->l); 
+  clone(src->r); clone(src->l);
 }
 
   // Recursivly Deletes RBNodes
@@ -318,9 +322,25 @@ void RBTree<keyT, valT>::
 destroy(RBNode<keyT, valT> *node) {
   if (!node) return;
   // cout << "destroying node: [" << node->key << " | " << node->val << "]" << endl;
-  if (node->l != nullptr) destroy(node->l);
-  if (node->r != nullptr) destroy(node->r);
+  if (node->l != nullptr)
+    destroy(node->l);
+  if (node->r != nullptr)
+    destroy(node->r);
   delete node;
+}
+
+// Finds Node @ key
+template <typename keyT, typename valT>
+RBNode<keyT, valT> *RBTree<keyT, valT>::
+find(RBNode<keyT, valT> *node, keyT k) {
+  if (!node) return nullptr;
+  if (node->key == k)
+    return node;
+  else if (node->key < k)
+    node = find(node->r, k);
+  else if (node->key > k)
+    node = find(node->l, k);
+  return node;
 }
 
   // Adds Node To Tree
@@ -342,16 +362,17 @@ template <typename keyT, typename valT>
 void RBTree<keyT, valT>::
 fixAdd(RBNode<keyT, valT> *node) {
   RBNode<keyT, valT> *p, *g, *u, *n;
-  p = g = u = nullptr;
-  n = node;
+  p = g = u = nullptr; n = node;
   // cout << " fixing Add()" << endl;                 //TEST
-  while (n != root && n->red() && n->p->red()){
+  while (n != root &&
+  (n && n->red()) &&
+  (n->p && n->p->red())){
     p = n->p; g = p->p;
     if (p == g->l) {
         // parent is left child
         // cout << "  parent is left child" << endl;   //TEST
       u = g->r;
-      if (u->red()) {
+      if (u && u->red()) {
           // uncle is red
           // cout << "   uncle is red" << endl;         //TEST
           // cout << "     recoloring" << endl;         //TEST
@@ -380,7 +401,7 @@ fixAdd(RBNode<keyT, valT> *node) {
         // parent is right child
         // cout << "  parent is right child" << endl;    //TEST
       u = g->l;
-      if (u->red()) {
+      if (u && u->red()) {
           // uncle is red
           // cout << "   uncle is red" << endl;          //TEST
           // cout << "     recoloring" << endl;          //TEST
