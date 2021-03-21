@@ -89,7 +89,7 @@ class RBTree {
   struct RBNode<keyT, valT> *root;
   int count;
   void mkRoot();              // working
-  void clone(                 // makeMe
+  void clone(                 // working
     RBNode<keyT, valT>*);
   void destroy(               // working
     RBNode<keyT, valT>*);
@@ -105,9 +105,9 @@ class RBTree {
 public:
   RBTree() {mkRoot();}        // working
   RBTree(keyT*, valT*, int);  // working
-  RBTree(RBTree&);            // makeMe
+  RBTree(RBTree&);            // working
   ~RBTree() {destroy(root);}  // working
-  RBTree& operator=(RBTree);  // makeMe
+  RBTree& operator=(RBTree);  // working
   valT *search(keyT);         // makeMe
   void insert(keyT, valT);    // working
   int remove(keyT);           // makeMe
@@ -149,7 +149,8 @@ RBTree(keyT *k, valT *v, int s) {
 template <typename keyT, typename valT>
 RBTree<keyT, valT>::
 RBTree(RBTree& src) {
-  mkRoot(); insert(src.root->key, src.root->val);
+  mkRoot();
+  insert(src.root->key, src.root->val);
     // recursivly duplicate each node
   clone(src.root);
 }
@@ -160,7 +161,8 @@ RBTree<keyT, valT>& RBTree<keyT, valT>::
 operator=(RBTree src) {
     // recursivly delete & duplicate each node
   destroy(this->root);
-  mkRoot(); insert(src.root->key, src.root->val);
+  mkRoot();
+  insert(src.root->key, src.root->val);
   clone(src.root);
   return *this;
 }
@@ -309,7 +311,7 @@ clone(RBNode<keyT, valT> *src) {
     insert(src->l->key, src->l->val);
   if (src->r != nullptr)
     insert(src->r->key, src->r->val);
-  clone(src->r); clone(src->l); 
+  clone(src->r); clone(src->l);
 }
 
   // Recursivly Deletes RBNodes
@@ -318,8 +320,10 @@ void RBTree<keyT, valT>::
 destroy(RBNode<keyT, valT> *node) {
   if (!node) return;
   // cout << "destroying node: [" << node->key << " | " << node->val << "]" << endl;
-  if (node->l != nullptr) destroy(node->l);
-  if (node->r != nullptr) destroy(node->r);
+  if (node->l != nullptr)
+    destroy(node->l);
+  if (node->r != nullptr)
+    destroy(node->r);
   delete node;
 }
 
@@ -342,8 +346,7 @@ template <typename keyT, typename valT>
 void RBTree<keyT, valT>::
 fixAdd(RBNode<keyT, valT> *node) {
   RBNode<keyT, valT> *p, *g, *u, *n;
-  p = g = u = nullptr;
-  n = node;
+  p = g = u = nullptr; n = node;
   // cout << " fixing Add()" << endl;                 //TEST
   while (n != root && n->red() && n->p->red()){
     p = n->p; g = p->p;
