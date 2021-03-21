@@ -40,17 +40,17 @@ int main(int argc, char const *argv[]) {
 
   RBTree<int, string> tree0(K0, V0, 15);
 
-  cout << "==========================\n" << endl;
+  // cout << "==========================\n" << endl;
 
-  tree0.view(tree0.getroot(), "", true);
+  // tree0.view(tree0.getroot(), "", true);
 
-  cout << "==========================\n" << endl;
+  // cout << "==========================\n" << endl;
 
   RBTree<int, string> tree1(tree0);
 
-  tree1.view(tree1.getroot(), "", true);
+  // tree1.view(tree1.getroot(), "", true);
 
-  cout << "==========================\n" << endl;
+  // cout << "==========================\n" << endl;
 
   RBTree<int, string> tree2;
   tree2.insert(7, "salmon");
@@ -61,13 +61,13 @@ int main(int argc, char const *argv[]) {
   tree2.insert(6, "pink");
   tree2.insert(9, "purple");
 
-  tree2.view(tree2.getroot(), "", true);
+  // tree2.view(tree2.getroot(), "", true);
 
-  cout << "==========================\n" << endl;
+  // cout << "==========================\n" << endl;
 
   tree2 = tree1;
 
-  tree2.view(tree2.getroot(), "", true);
+  // tree2.view(tree2.getroot(), "", true);
 
   cout << "==========================\n" << endl;
 
@@ -92,6 +92,45 @@ int main(int argc, char const *argv[]) {
   tree1.view(tree1.getroot(), "", true);
 
   cout << "==========================\n" << endl;
+
+  cout << "there are " << tree0.size() << " elements in tree0;" << endl;
+
+  cout << "there are " << tree1.size() << " elements in tree1;" << endl;
+
+  cout << "==========================\n" << endl;
+
+  cout << "\nsearching for " << K1[5] << endl;
+  cout << "should get " << V1[5] << endl;
+  cout << "result: " << *tree1.search(K1[5]) << endl;
+
+  cout << "\nsearching for " << K0[5] << endl;
+  cout << "should get " << V0[5] << endl;
+  cout << "result: " << *tree1.search(K0[5]) << endl;
+
+  cout << "\nsearching for " << K0[7] << endl;
+  cout << "should get " << V0[7] << endl;
+  cout << "result: " << *tree1.search(K0[7]) << endl;
+
+  cout << "\nsearching for " << K0[11] << endl;
+  cout << "should get " << V0[11] << endl;
+  cout << "result: " << *tree1.search(K0[11]) << endl;
+
+  cout << "\nsearching for -1" << endl;
+  cout << "should get NULL" << endl;
+  if (tree1.search(-1) == NULL)
+    cout << "result: NULL" << endl;
+  else cout << "error" << endl;
+
+  cout << "\nsearching for " << K1[7] << endl;
+  cout << "should get " << V1[7] << endl;
+  cout << "result: " << *tree1.search(K1[7]) << endl;
+
+  cout << "\nsearching for " << K0[13] << endl;
+  cout << "should get " << V0[13] << endl;
+  cout << "result: " << *tree1.search(K0[13]) << endl;
+
+  cout << "==========================\n" << endl;
+
 
   return 0;
 }

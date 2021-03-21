@@ -73,9 +73,7 @@ leaf() {
 template <typename keyT, typename valT>
 bool RBNode<keyT, valT>::
 red() {
-  if (this == nullptr)
-    return false;
-  else return !black;
+  return !black;
 }
 
 
@@ -93,7 +91,9 @@ class RBTree {
     RBNode<keyT, valT>*);
   void destroy(               // working
     RBNode<keyT, valT>*);
-  RBNode<keyT, valT> * add(   // working
+  RBNode<keyT, valT> *find(   // working
+    RBNode<keyT, valT>*, keyT);
+  RBNode<keyT, valT> *add(    // working
     RBNode<keyT, valT>*,
     RBNode<keyT, valT>*);
   void fixAdd(                // working
@@ -108,7 +108,7 @@ public:
   RBTree(RBTree&);            // working
   ~RBTree() {destroy(root);}  // working
   RBTree& operator=(RBTree);  // working
-  valT *search(keyT);         // makeMe
+  valT *search(keyT);         // working
   void insert(keyT, valT);    // working
   int remove(keyT);           // makeMe
   int rank(keyT);             // makeMe
@@ -171,7 +171,9 @@ operator=(RBTree src) {
 template <typename keyT, typename valT>
 valT* RBTree<keyT, valT>::
 search(keyT k) {
-
+  RBNode<keyT, valT> *loc = find(root, k);
+  if (loc) return &loc->val;
+  else return NULL;
 }
 
   // Insert New Node
@@ -327,6 +329,20 @@ destroy(RBNode<keyT, valT> *node) {
   delete node;
 }
 
+// Finds Node @ key
+template <typename keyT, typename valT>
+RBNode<keyT, valT> *RBTree<keyT, valT>::
+find(RBNode<keyT, valT> *node, keyT k) {
+  if (!node) return nullptr;
+  if (node->key == k)
+    return node;
+  else if (node->key < k)
+    node = find(node->r, k);
+  else if (node->key > k)
+    node = find(node->l, k);
+  return node;
+}
+
   // Adds Node To Tree
 template <typename keyT, typename valT>
 RBNode<keyT, valT> *RBTree<keyT, valT>::
@@ -348,13 +364,15 @@ fixAdd(RBNode<keyT, valT> *node) {
   RBNode<keyT, valT> *p, *g, *u, *n;
   p = g = u = nullptr; n = node;
   // cout << " fixing Add()" << endl;                 //TEST
-  while (n != root && n->red() && n->p->red()){
+  while (n != root &&
+  (n && n->red()) &&
+  (n->p && n->p->red())){
     p = n->p; g = p->p;
     if (p == g->l) {
         // parent is left child
         // cout << "  parent is left child" << endl;   //TEST
       u = g->r;
-      if (u->red()) {
+      if (u && u->red()) {
           // uncle is red
           // cout << "   uncle is red" << endl;         //TEST
           // cout << "     recoloring" << endl;         //TEST
@@ -383,7 +401,7 @@ fixAdd(RBNode<keyT, valT> *node) {
         // parent is right child
         // cout << "  parent is right child" << endl;    //TEST
       u = g->l;
-      if (u->red()) {
+      if (u && u->red()) {
           // uncle is red
           // cout << "   uncle is red" << endl;          //TEST
           // cout << "     recoloring" << endl;          //TEST
