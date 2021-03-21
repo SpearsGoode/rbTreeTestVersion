@@ -211,7 +211,9 @@ remove(keyT k) {
 template <typename keyT, typename valT>
 int RBTree<keyT, valT>::
 rank(keyT k) {
-  return -1;
+  RBNode<keyT, valT> *loc = find(k, root);
+  if (!loc) return 0;
+  int
 }
 
   // Returns Key @ Position
