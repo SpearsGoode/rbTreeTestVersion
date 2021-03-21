@@ -278,7 +278,8 @@ view(RBNode<keyT, valT> *node, string indent, bool end) {
 
   //Returns Root
 template <typename keyT, typename valT>                     // REMOVE ME !!!!!!!
-RBNode<keyT, valT> *RBTree<keyT, valT>::getroot(){
+RBNode<keyT, valT> *RBTree<keyT, valT>::
+getroot(){
   return root;
 }
 
@@ -408,26 +409,6 @@ rotateL(RBNode<keyT, valT> *node) {
     cout << "     rotating left" << endl;  //TEST
   RBNode<keyT, valT> *tmp = node->r;
   node->r = tmp->l;
-  if (node->l != nullptr)
-    node->l->p = node;
-  tmp->p = node->p;
-  if (node->p == nullptr)
-    root = tmp;
-  else
-    if (node == node->p->r)
-      node->p->r = tmp;
-  else node->p->l = tmp;
-  tmp->r = node;
-  node->p = tmp;
-}
-
-  // Rotates Nodes Right
-template <typename keyT, typename valT>
-void RBTree<keyT, valT>::
-rotateR(RBNode<keyT, valT> *node) {
-    cout << "     rotating right" << endl; ///TEST
-  RBNode<keyT, valT> *tmp = node->l;
-  node->l = tmp->r;
   if (node->r != nullptr)
     node->r->p = node;
   tmp->p = node->p;
@@ -438,6 +419,26 @@ rotateR(RBNode<keyT, valT> *node) {
       node->p->l = tmp;
   else node->p->r = tmp;
   tmp->l = node;
+  node->p = tmp;
+}
+
+  // Rotates Nodes Right
+template <typename keyT, typename valT>
+void RBTree<keyT, valT>::
+rotateR(RBNode<keyT, valT> *node) {
+    cout << "     rotating right" << endl; ///TEST
+  RBNode<keyT, valT> *tmp = node->l;
+  node->l = tmp->r;
+  if (node->l != nullptr)
+    node->l->p = node;
+  tmp->p = node->p;
+  if (node->p == nullptr)
+    root = tmp;
+  else
+    if (node == node->p->l)
+      node->p->l = tmp;
+  else node->p->r = tmp;
+  tmp->r = node;
   node->p = tmp;
 
 }
