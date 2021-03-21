@@ -22,8 +22,8 @@ int main(int argc, char const *argv[]) {
   cout << "Starting RBTreeTest" << endl;
   cout << "==========================\n" << endl;
   cout << "test set: index: key | val" << endl;
-  int K[15];
-  string V[15] = {
+  int K0[15];
+  string V0[15] = {
     "clown", "car", "scuba", "donkey",
     "masha", "syd", "food", "target",
     "haley", "linux", "water", "bread",
@@ -33,12 +33,12 @@ int main(int argc, char const *argv[]) {
   for (int i = 0; i < 15; i++) {
     uniform_int_distribution<>
     distrib(1000,9999);
-    K[i] = distrib(gen);
+    K0[i] = distrib(gen);
     if (i < 10) cout << 0;
-    cout << i << ": [" << K[i] << " | " << V[i] << "]" <<  endl;
+    cout << i << ": [" << K0[i] << " | " << V0[i] << "]" <<  endl;
   } cout << "==========================\n" << endl;
 
-  RBTree<int, string> tree0(K, V, 15);
+  RBTree<int, string> tree0(K0, V0, 15);
 
   cout << "==========================\n" << endl;
 
@@ -68,6 +68,28 @@ int main(int argc, char const *argv[]) {
   tree2 = tree1;
 
   tree2.view(tree2.getroot(), "", true);
+
+  cout << "==========================\n" << endl;
+
+  int K1[15];
+  string V1[15] = {
+    "dylan", "george", "kink", "diamond",
+    "gme", "hand", "ape", "john",
+    "phase", "manjaro", "link", "eth",
+    "btc", "twelve", "ocean"};
+  for (int i = 0; i < 15; i++) {
+    uniform_int_distribution<>
+    distrib(1000,9999);
+    K1[i] = distrib(gen);
+    cout << i+15 << ": [" << K1[i] << " | " << V1[i] << "]" <<  endl;
+  } cout << "==========================\n" << endl;
+
+  for (int i = 0; i < 15; i++)
+    tree1.insert(K1[i], V1[i]);
+
+  cout << "==========================\n" << endl;
+
+  tree1.view(tree1.getroot(), "", true);
 
   cout << "==========================\n" << endl;
 
