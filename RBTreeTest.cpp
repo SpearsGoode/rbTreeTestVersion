@@ -89,7 +89,7 @@ int main(int argc, char const *argv[]) {
 
   cout << "==========================\n" << endl;
 
-  tree1.view(tree1.getroot(), "", true);
+  // tree1.view(tree1.getroot(), "", true);
 
   // cout << "==========================\n" << endl;
   //
@@ -148,11 +148,26 @@ int main(int argc, char const *argv[]) {
   //   cout << "rank of " << tmp << ": " << tree1.rank(tmp) << endl;
   // }
 
-  cout << "==========================\n" << endl;
-
   for (int i = 1; i <= 30; i++) {
     cout << "key at rank " << i << ": " << tree1.select(i) << endl;
   }
+
+  cout << "==========================\n" << endl;
+
+  // for (int i = 0; i < 16; i++) {
+  //   if (tree1.predecessor(K0[i]) != NULL)
+  //     cout << "predecessor of " << K0[i] << " -> " << *tree1.predecessor(K0[i]) << endl;
+  //   else cout << K0[i] << " has no predecessor" << endl;
+  //   if (tree1.successor(K0[i]) != NULL)
+  //     cout << "successor of " << K0[i] << " -> " << *tree1.successor(K0[i]) << endl;
+  //   else cout << K0[i] << " has no successor" << endl;
+  //   if (tree1.predecessor(K1[i]) != NULL)
+  //     cout << "predecessor of " << K1[i] << " -> " << *tree1.predecessor(K1[i]) << endl;
+  //   else cout << K1[i] << " has no predecessor" << endl;
+  //   if (tree1.successor(K1[i]) != NULL)
+  //     cout << "successor of " << K1[i] << " -> " << *tree1.successor(K1[i]) << endl;
+  //   else cout << K1[i] << " has no successor" << endl;
+  // }
 
 
   return 0;

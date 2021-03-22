@@ -90,7 +90,13 @@ class RBTree {
   RBNode<keyT, valT> *getMin(   // working
     RBNode<keyT, valT> *
   );
+  RBNode<keyT, valT> *getMax(   // working
+    RBNode<keyT, valT> *
+  );
   RBNode<keyT, valT> *up1(      // working
+    RBNode<keyT, valT> *
+  );
+  RBNode<keyT, valT> *dn1(      // working
     RBNode<keyT, valT> *
   );
   void clone(                   // working
@@ -125,7 +131,7 @@ public:
   int remove(keyT);             // makeMe
   int rank(keyT);               // too slow
   keyT select(int);             // too slow
-  keyT *successor(keyT);        // makeMe
+  keyT *successor(keyT);        // working
   keyT *predecessor(keyT);      // makeMe
   int size() {return count;}    // working
   void preorder();              // makeMe
@@ -259,14 +265,26 @@ select(int pos) {
 template <typename keyT, typename valT>
 keyT* RBTree<keyT, valT>::
 successor(keyT k) {
-
+  RBNode<keyT, valT> *node;
+  node = find(root, k);
+  if (!node) return NULL;
+  node = up1(node);
+  if (node)
+    return &node->key;
+  else return NULL;
 }
 
   // Returns Predecessor
 template <typename keyT, typename valT>
 keyT* RBTree<keyT, valT>::
 predecessor(keyT k) {
-
+  RBNode<keyT, valT> *node;
+  node = find(root, k);
+  if (!node) return NULL;
+  node = dn1(node);
+  if (node)
+    return &node->key;
+  else return NULL;
 }
 
   // Prints Preordered Keys
@@ -343,7 +361,15 @@ template <typename keyT, typename valT>
 RBNode<keyT, valT> *RBTree<keyT, valT>::
 getMin(RBNode<keyT, valT> *node) {
   while (node->l) node = node->l;
-return node;
+  return node;
+}
+
+  // Returns Largest Element
+template <typename keyT, typename valT>
+RBNode<keyT, valT> *RBTree<keyT, valT>::
+getMax(RBNode<keyT, valT> *node) {
+  while (node->r) node = node->r;
+  return node;
 }
 
   // Returns Next Largest Element
@@ -354,6 +380,19 @@ up1(RBNode<keyT, valT> *node) {
     return getMin(node->r);
   RBNode<keyT, valT> *rent = node->p;
   while (rent && node == rent->r) {
+    node = rent;
+    rent = rent->p;
+  }return rent;
+}
+
+  // Returns Next Smallest Element
+template <typename keyT, typename valT>
+RBNode<keyT, valT> *RBTree<keyT, valT>::
+dn1(RBNode<keyT, valT> *node) {
+  if (node->l)
+    return getMax(node->l);
+  RBNode<keyT, valT> *rent = node->p;
+  while (rent && node == rent->l) {
     node = rent;
     rent = rent->p;
   }return rent;
