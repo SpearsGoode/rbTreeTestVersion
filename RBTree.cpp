@@ -99,6 +99,9 @@ class RBTree {
   RBNode<keyT, valT> *dn1(      // working
     RBNode<keyT, valT> *
   );
+  void trav(char,               // working
+    RBNode<keyT, valT>*
+  );
   void clone(                   // working
     RBNode<keyT, valT>*
   );
@@ -132,11 +135,11 @@ public:
   int rank(keyT);               // too slow
   keyT select(int);             // too slow
   keyT *successor(keyT);        // working
-  keyT *predecessor(keyT);      // makeMe
+  keyT *predecessor(keyT);      // working
   int size() {return count;}    // working
-  void preorder();              // makeMe
-  void inorder();               // makeMe
-  void postorder();             // makeMe
+  void preorder();              // working
+  void inorder();               // working
+  void postorder();             // working
   void printk(int);             // makeMe
 
 // TESTING TESTING TESTING
@@ -173,7 +176,7 @@ RBTree(RBTree& src) {
   clone(src.root);
 }
 
-  // Cppy Assignment Operator
+  // Coppy Assignment Operator
 template <typename keyT, typename valT>
 RBTree<keyT, valT>& RBTree<keyT, valT>::
 operator=(RBTree src) {
@@ -291,21 +294,24 @@ predecessor(keyT k) {
 template <typename keyT, typename valT>
 void RBTree<keyT, valT>::
 preorder() {
-
+  trav('<', root);
+  cout << endl;
 }
 
   // Prints Inordered Keys
 template <typename keyT, typename valT>
 void RBTree<keyT, valT>::
 inorder() {
-
+  trav('v', root);
+  cout << endl;
 }
 
   // Prints Postordered Keys
 template <typename keyT, typename valT>
 void RBTree<keyT, valT>::
 postorder() {
-
+  trav('>', root);
+  cout << endl;
 }
 
   // Prints Smallest Keys
@@ -334,7 +340,7 @@ view(RBNode<keyT, valT> *node, string indent, bool end) {
   }
 }
 
-  //Returns Root
+  // Returns Root
 template <typename keyT, typename valT>                     // REMOVE ME !!!!!!!
 RBNode<keyT, valT> *RBTree<keyT, valT>::
 getroot(){
@@ -396,6 +402,31 @@ dn1(RBNode<keyT, valT> *node) {
     node = rent;
     rent = rent->p;
   }return rent;
+}
+
+  // Prints Traversals
+template <typename keyT, typename valT>
+void RBTree<keyT, valT>::
+trav(char o, RBNode<keyT, valT> *node) {
+  if (node) {
+    switch (o) {
+      case '<':
+        cout << node->key << ' ';
+        trav(o, node->l);
+        trav(o, node->r);
+        break;
+      case 'v':
+        trav(o, node->l);
+        cout << node->key << ' ';
+        trav(o, node->r);
+        break;
+      case '>':
+        trav(o, node->l);
+        trav(o, node->r);
+        cout << node->key << ' ';
+        break;
+    }
+  }
 }
 
   // Recursivly Duplicates RBNodes

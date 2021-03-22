@@ -89,8 +89,6 @@ int main(int argc, char const *argv[]) {
 
   cout << "==========================\n" << endl;
 
-  // tree1.view(tree1.getroot(), "", true);
-
   // cout << "==========================\n" << endl;
   //
   // cout << "there are " << tree0.size() << " elements in tree0;" << endl;
@@ -151,6 +149,25 @@ int main(int argc, char const *argv[]) {
   for (int i = 1; i <= 30; i++) {
     cout << "key at rank " << i << ": " << tree1.select(i) << endl;
   }
+
+  cout << "==========================\n" << endl;
+
+  tree1.view(tree1.getroot(), "", true);
+
+  cout << "==========================\n" << endl;
+
+  cout << "preorder:\n" << endl;
+  tree1.preorder();
+
+  cout << "==========================\n" << endl;
+
+  cout << "inorder:\n" << endl;
+  tree1.inorder();
+
+  cout << "==========================\n" << endl;
+
+  cout << "postorder:\n" << endl;
+  tree1.postorder();
 
   cout << "==========================\n" << endl;
 
