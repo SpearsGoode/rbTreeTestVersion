@@ -138,17 +138,21 @@ int main(int argc, char const *argv[]) {
 
   cout << "==========================\n" << endl;
 
-  cout << "rank of " << 7777 << ": " << tree1.rank(7777) << endl;
-  cout << "rank of " << 1234 << ": " << tree1.rank(1234) << endl;
-
-  for (int i = 0; i < 15; i++) {
-    uniform_int_distribution<>
-    distrib(1000,9999);
-    int tmp = distrib(gen);
-    cout << "rank of " << tmp << ": " << tree1.rank(tmp) << endl;
-  }
+  // cout << "rank of " << 7777 << ": " << tree1.rank(7777) << endl;
+  // cout << "rank of " << 1234 << ": " << tree1.rank(1234) << endl;
+  //
+  // for (int i = 0; i < 15; i++) {
+  //   uniform_int_distribution<>
+  //   distrib(1000,9999);
+  //   int tmp = distrib(gen);
+  //   cout << "rank of " << tmp << ": " << tree1.rank(tmp) << endl;
+  // }
 
   cout << "==========================\n" << endl;
+
+  for (int i = 1; i <= 30; i++) {
+    cout << "key at rank " << i << ": " << tree1.select(i) << endl;
+  }
 
 
   return 0;

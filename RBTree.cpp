@@ -86,42 +86,52 @@ template <typename keyT, typename valT>
 class RBTree {
   struct RBNode<keyT, valT> *root;
   int count;
-  void mkRoot();              // working
-  void clone(                 // working
-    RBNode<keyT, valT>*);
-  void destroy(               // working
-    RBNode<keyT, valT>*);
-  RBNode<keyT, valT> *find(   // working
-    RBNode<keyT, valT>*, keyT);
-  int tally(bool*,            // test
-    RBNode<keyT, valT>*, keyT);
-  RBNode<keyT, valT> *add(    // working
+  void mkRoot();                // working
+  RBNode<keyT, valT> *getMin(   // working
+    RBNode<keyT, valT> *
+  );
+  RBNode<keyT, valT> *up1(      // working
+    RBNode<keyT, valT> *
+  );
+  void clone(                   // working
+    RBNode<keyT, valT>*
+  );
+  void destroy(                 // working
+    RBNode<keyT, valT>*
+  );
+  RBNode<keyT, valT> *find(     // working
+    RBNode<keyT, valT>*, keyT
+  );
+  int tally(bool*,              // working
+    RBNode<keyT, valT>*, keyT
+  );
+  RBNode<keyT, valT> *add(      // working
     RBNode<keyT, valT>*,
     RBNode<keyT, valT>*);
-  void fixAdd(                // working
+  void fixAdd(                  // working
     RBNode<keyT, valT>*);
-  void rotateL(               // working
+  void rotateL(                 // working
     RBNode<keyT, valT>*);
-  void rotateR(               // working
+  void rotateR(                 // working
     RBNode<keyT, valT>*);
 public:
-  RBTree() {mkRoot();}        // working
-  RBTree(keyT*, valT*, int);  // working
-  RBTree(RBTree&);            // working
-  ~RBTree() {destroy(root);}  // working
-  RBTree& operator=(RBTree);  // working
-  valT *search(keyT);         // working
-  void insert(keyT, valT);    // working
-  int remove(keyT);           // makeMe
-  int rank(keyT);             // test
-  keyT select(int);           // makeMe
-  keyT *successor(keyT);      // makeMe
-  keyT *predecessor(keyT);    // makeMe
-  int size() {return count;}  // working
-  void preorder();            // makeMe
-  void inorder();             // makeMe
-  void postorder();           // makeMe
-  void printk(int);           // makeMe
+  RBTree() {mkRoot();}          // working
+  RBTree(keyT*, valT*, int);    // working
+  RBTree(RBTree&);              // working
+  ~RBTree() {destroy(root);}    // working
+  RBTree& operator=(RBTree);    // working
+  valT *search(keyT);           // working well
+  void insert(keyT, valT);      // working
+  int remove(keyT);             // makeMe
+  int rank(keyT);               // too slow
+  keyT select(int);             // too slow
+  keyT *successor(keyT);        // makeMe
+  keyT *predecessor(keyT);      // makeMe
+  int size() {return count;}    // working
+  void preorder();              // makeMe
+  void inorder();               // makeMe
+  void postorder();             // makeMe
+  void printk(int);             // makeMe
 
 // TESTING TESTING TESTING
   void view(                        // REMOVE ME !!!!!!!
@@ -238,8 +248,11 @@ rank(keyT k) {
   // Returns Key @ Position
 template <typename keyT, typename valT>
 keyT RBTree<keyT, valT>::
-select(int p) {
-
+select(int pos) {
+  RBNode<keyT, valT> *node = getMin(root);
+  for (int i = 1; i < pos; i++) {
+    node = up1(node);
+  } return node->key;
 }
 
   // Returns Successor
@@ -325,6 +338,27 @@ mkRoot() {
   count = 0;
 }
 
+  // Returns Smallest Element
+template <typename keyT, typename valT>
+RBNode<keyT, valT> *RBTree<keyT, valT>::
+getMin(RBNode<keyT, valT> *node) {
+  while (node->l) node = node->l;
+return node;
+}
+
+  // Returns Next Largest Element
+template <typename keyT, typename valT>
+RBNode<keyT, valT> *RBTree<keyT, valT>::
+up1(RBNode<keyT, valT> *node) {
+  if (node->r)
+    return getMin(node->r);
+  RBNode<keyT, valT> *rent = node->p;
+  while (rent && node == rent->r) {
+    node = rent;
+    rent = rent->p;
+  }return rent;
+}
+
   // Recursivly Duplicates RBNodes
 template <typename keyT, typename valT>
 void RBTree<keyT, valT>::
@@ -373,7 +407,7 @@ tally(bool *f, RBNode<keyT, valT> *node, keyT k) {
     *f=true;
   if (k > root->key) {
     if (k <= node->key) t = 1;
-    if (node->l)
+    if (node->l && k < node->key)
       t += tally(f, node->l, k);
     if (node->r)
       t += tally(f, node->r, k);
@@ -381,7 +415,7 @@ tally(bool *f, RBNode<keyT, valT> *node, keyT k) {
     if (k >= node->key) t = 1;
     if (node->l)
       t += tally(f, node->l, k);
-    if (node->r)
+    if (node->r && k > node->key)
       t += tally(f, node->r, k);
   }
   return t;
