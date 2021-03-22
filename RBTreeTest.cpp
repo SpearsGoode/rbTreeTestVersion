@@ -150,26 +150,26 @@ int main(int argc, char const *argv[]) {
     cout << "key at rank " << i << ": " << tree1.select(i) << endl;
   }
 
-  cout << "==========================\n" << endl;
-
-  tree1.view(tree1.getroot(), "", true);
-
-  cout << "==========================\n" << endl;
-
-  cout << "preorder:\n" << endl;
-  tree1.preorder();
-
-  cout << "==========================\n" << endl;
-
-  cout << "inorder:\n" << endl;
-  tree1.inorder();
-
-  cout << "==========================\n" << endl;
-
-  cout << "postorder:\n" << endl;
-  tree1.postorder();
-
-  cout << "==========================\n" << endl;
+  // cout << "==========================\n" << endl;
+  //
+  // tree1.view(tree1.getroot(), "", true);
+  //
+  // cout << "==========================\n" << endl;
+  //
+  // cout << "preorder:\n" << endl;
+  // tree1.preorder();
+  //
+  // cout << "==========================\n" << endl;
+  //
+  // cout << "inorder:\n" << endl;
+  // tree1.inorder();
+  //
+  // cout << "==========================\n" << endl;
+  //
+  // cout << "postorder:\n" << endl;
+  // tree1.postorder();
+  //
+  // cout << "==========================\n" << endl;
 
   // for (int i = 0; i < 16; i++) {
   //   if (tree1.predecessor(K0[i]) != NULL)
@@ -185,6 +185,10 @@ int main(int argc, char const *argv[]) {
   //     cout << "successor of " << K1[i] << " -> " << *tree1.successor(K1[i]) << endl;
   //   else cout << K1[i] << " has no successor" << endl;
   // }
+
+  cout << "==========================\n" << endl;
+
+  tree1.printk(5);
 
 
   return 0;

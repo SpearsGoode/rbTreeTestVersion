@@ -102,6 +102,9 @@ class RBTree {
   void trav(char,               // working
     RBNode<keyT, valT>*
   );
+  void trav(int&,               // working
+    RBNode<keyT, valT>*
+  );
   void clone(                   // working
     RBNode<keyT, valT>*
   );
@@ -318,7 +321,8 @@ postorder() {
 template <typename keyT, typename valT>
 void RBTree<keyT, valT>::
 printk(int k) {
-
+  trav(k, root);
+  cout << endl;
 }
 
   // Prints Tree
@@ -426,6 +430,20 @@ trav(char o, RBNode<keyT, valT> *node) {
         cout << node->key << ' ';
         break;
     }
+  }
+}
+
+  // Recusivly Prints Smallest Keys
+template <typename keyT, typename valT>
+void RBTree<keyT, valT>::
+trav(int &i, RBNode<keyT, valT> *node) {
+  if (i && node) {
+    trav(i, node->l);
+    if (i) {
+      cout << node->key << ' ';
+      i--;
+    }
+    trav(i, node->r);
   }
 }
 
