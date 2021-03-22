@@ -93,7 +93,7 @@ class RBTree {
     RBNode<keyT, valT>*);
   RBNode<keyT, valT> *find(   // working
     RBNode<keyT, valT>*, keyT);
-  int tally(bool*,            // test
+  int tally(bool*,            // working
     RBNode<keyT, valT>*, keyT);
   RBNode<keyT, valT> *add(    // working
     RBNode<keyT, valT>*,
@@ -113,7 +113,7 @@ public:
   valT *search(keyT);         // working
   void insert(keyT, valT);    // working
   int remove(keyT);           // makeMe
-  int rank(keyT);             // test
+  int rank(keyT);             // working
   keyT select(int);           // makeMe
   keyT *successor(keyT);      // makeMe
   keyT *predecessor(keyT);    // makeMe
@@ -373,7 +373,7 @@ tally(bool *f, RBNode<keyT, valT> *node, keyT k) {
     *f=true;
   if (k > root->key) {
     if (k <= node->key) t = 1;
-    if (node->l)
+    if (node->l && k < node->key)
       t += tally(f, node->l, k);
     if (node->r)
       t += tally(f, node->r, k);
@@ -381,7 +381,7 @@ tally(bool *f, RBNode<keyT, valT> *node, keyT k) {
     if (k >= node->key) t = 1;
     if (node->l)
       t += tally(f, node->l, k);
-    if (node->r)
+    if (node->r && k > node->key)
       t += tally(f, node->r, k);
   }
   return t;
