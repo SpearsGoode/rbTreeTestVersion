@@ -90,8 +90,17 @@ class RBTree {
   RBNode<keyT, valT> *getMin(   // working
     RBNode<keyT, valT> *
   );
+  RBNode<keyT, valT> *getMax(   // working
+    RBNode<keyT, valT> *
+  );
   RBNode<keyT, valT> *up1(      // working
     RBNode<keyT, valT> *
+  );
+  RBNode<keyT, valT> *dn1(      // working
+    RBNode<keyT, valT> *
+  );
+  void trav(char,               // working
+    RBNode<keyT, valT>*
   );
   void clone(                   // working
     RBNode<keyT, valT>*
@@ -125,12 +134,12 @@ public:
   int remove(keyT);             // makeMe
   int rank(keyT);               // too slow
   keyT select(int);             // too slow
-  keyT *successor(keyT);        // makeMe
-  keyT *predecessor(keyT);      // makeMe
+  keyT *successor(keyT);        // working
+  keyT *predecessor(keyT);      // working
   int size() {return count;}    // working
-  void preorder();              // makeMe
-  void inorder();               // makeMe
-  void postorder();             // makeMe
+  void preorder();              // working
+  void inorder();               // working
+  void postorder();             // working
   void printk(int);             // makeMe
 
 // TESTING TESTING TESTING
@@ -167,7 +176,7 @@ RBTree(RBTree& src) {
   clone(src.root);
 }
 
-  // Cppy Assignment Operator
+  // Coppy Assignment Operator
 template <typename keyT, typename valT>
 RBTree<keyT, valT>& RBTree<keyT, valT>::
 operator=(RBTree src) {
@@ -259,35 +268,50 @@ select(int pos) {
 template <typename keyT, typename valT>
 keyT* RBTree<keyT, valT>::
 successor(keyT k) {
-
+  RBNode<keyT, valT> *node;
+  node = find(root, k);
+  if (!node) return NULL;
+  node = up1(node);
+  if (node)
+    return &node->key;
+  else return NULL;
 }
 
   // Returns Predecessor
 template <typename keyT, typename valT>
 keyT* RBTree<keyT, valT>::
 predecessor(keyT k) {
-
+  RBNode<keyT, valT> *node;
+  node = find(root, k);
+  if (!node) return NULL;
+  node = dn1(node);
+  if (node)
+    return &node->key;
+  else return NULL;
 }
 
   // Prints Preordered Keys
 template <typename keyT, typename valT>
 void RBTree<keyT, valT>::
 preorder() {
-
+  trav('<', root);
+  cout << endl;
 }
 
   // Prints Inordered Keys
 template <typename keyT, typename valT>
 void RBTree<keyT, valT>::
 inorder() {
-
+  trav('v', root);
+  cout << endl;
 }
 
   // Prints Postordered Keys
 template <typename keyT, typename valT>
 void RBTree<keyT, valT>::
 postorder() {
-
+  trav('>', root);
+  cout << endl;
 }
 
   // Prints Smallest Keys
@@ -316,7 +340,7 @@ view(RBNode<keyT, valT> *node, string indent, bool end) {
   }
 }
 
-  //Returns Root
+  // Returns Root
 template <typename keyT, typename valT>                     // REMOVE ME !!!!!!!
 RBNode<keyT, valT> *RBTree<keyT, valT>::
 getroot(){
@@ -343,7 +367,15 @@ template <typename keyT, typename valT>
 RBNode<keyT, valT> *RBTree<keyT, valT>::
 getMin(RBNode<keyT, valT> *node) {
   while (node->l) node = node->l;
-return node;
+  return node;
+}
+
+  // Returns Largest Element
+template <typename keyT, typename valT>
+RBNode<keyT, valT> *RBTree<keyT, valT>::
+getMax(RBNode<keyT, valT> *node) {
+  while (node->r) node = node->r;
+  return node;
 }
 
   // Returns Next Largest Element
@@ -357,6 +389,44 @@ up1(RBNode<keyT, valT> *node) {
     node = rent;
     rent = rent->p;
   }return rent;
+}
+
+  // Returns Next Smallest Element
+template <typename keyT, typename valT>
+RBNode<keyT, valT> *RBTree<keyT, valT>::
+dn1(RBNode<keyT, valT> *node) {
+  if (node->l)
+    return getMax(node->l);
+  RBNode<keyT, valT> *rent = node->p;
+  while (rent && node == rent->l) {
+    node = rent;
+    rent = rent->p;
+  }return rent;
+}
+
+  // Prints Traversals
+template <typename keyT, typename valT>
+void RBTree<keyT, valT>::
+trav(char o, RBNode<keyT, valT> *node) {
+  if (node) {
+    switch (o) {
+      case '<':
+        cout << node->key << ' ';
+        trav(o, node->l);
+        trav(o, node->r);
+        break;
+      case 'v':
+        trav(o, node->l);
+        cout << node->key << ' ';
+        trav(o, node->r);
+        break;
+      case '>':
+        trav(o, node->l);
+        trav(o, node->r);
+        cout << node->key << ' ';
+        break;
+    }
+  }
 }
 
   // Recursivly Duplicates RBNodes
