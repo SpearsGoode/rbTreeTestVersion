@@ -93,6 +93,8 @@ class RBTree {
     RBNode<keyT, valT>*);
   RBNode<keyT, valT> *find(   // working
     RBNode<keyT, valT>*, keyT);
+  int tally(bool*,            // test
+    RBNode<keyT, valT>*, keyT);
   RBNode<keyT, valT> *add(    // working
     RBNode<keyT, valT>*,
     RBNode<keyT, valT>*);
@@ -111,7 +113,7 @@ public:
   valT *search(keyT);         // working
   void insert(keyT, valT);    // working
   int remove(keyT);           // makeMe
-  int rank(keyT);             // makeMe
+  int rank(keyT);             // test
   keyT select(int);           // makeMe
   keyT *successor(keyT);      // makeMe
   keyT *predecessor(keyT);    // makeMe
@@ -211,9 +213,26 @@ remove(keyT k) {
 template <typename keyT, typename valT>
 int RBTree<keyT, valT>::
 rank(keyT k) {
-  RBNode<keyT, valT> *loc = find(k, root);
-  if (!loc) return 0;
-  int
+  int i;
+  bool found = false;
+  bool *f = &found;
+  if (k == root->key) {
+    i = 1; *f=true;
+    if (root->l)
+      i += tally(f, root->l, k);
+  }
+  if (k < root->key) {
+    i = 0;
+    if (root->l)
+      i += tally(f, root->l, k);
+  }
+  if (k > root->key) {
+    i = count; ++i;
+    if (root->r)
+      i -= tally(f, root->r, k);
+  }
+  if (!found) return 0;
+  else return i;
 }
 
   // Returns Key @ Position
@@ -331,7 +350,7 @@ destroy(RBNode<keyT, valT> *node) {
   delete node;
 }
 
-// Finds Node @ key
+  // Finds Node @ key
 template <typename keyT, typename valT>
 RBNode<keyT, valT> *RBTree<keyT, valT>::
 find(RBNode<keyT, valT> *node, keyT k) {
@@ -343,6 +362,29 @@ find(RBNode<keyT, valT> *node, keyT k) {
   else if (node->key > k)
     node = find(node->l, k);
   return node;
+}
+
+  // Counts Nodes Recursivly
+template <typename keyT, typename valT>
+int RBTree<keyT, valT>::
+tally(bool *f, RBNode<keyT, valT> *node, keyT k) {
+  int t = 0;
+  if (k == node->key)
+    *f=true;
+  if (k > root->key) {
+    if (k <= node->key) t = 1;
+    if (node->l)
+      t += tally(f, node->l, k);
+    if (node->r)
+      t += tally(f, node->r, k);
+  } else {
+    if (k >= node->key) t = 1;
+    if (node->l)
+      t += tally(f, node->l, k);
+    if (node->r)
+      t += tally(f, node->r, k);
+  }
+  return t;
 }
 
   // Adds Node To Tree

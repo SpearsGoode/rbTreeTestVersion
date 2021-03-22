@@ -91,43 +91,62 @@ int main(int argc, char const *argv[]) {
 
   tree1.view(tree1.getroot(), "", true);
 
+  // cout << "==========================\n" << endl;
+  //
+  // cout << "there are " << tree0.size() << " elements in tree0;" << endl;
+  //
+  // cout << "there are " << tree1.size() << " elements in tree1;" << endl;
+
+  // cout << "==========================\n" << endl;
+  //
+  // cout << "\nsearching for " << K1[5] << endl;
+  // cout << "should get " << V1[5] << endl;
+  // cout << "result: " << *tree1.search(K1[5]) << endl;
+  //
+  // cout << "\nsearching for " << K0[5] << endl;
+  // cout << "should get " << V0[5] << endl;
+  // cout << "result: " << *tree1.search(K0[5]) << endl;
+  //
+  // cout << "\nsearching for " << K0[7] << endl;
+  // cout << "should get " << V0[7] << endl;
+  // cout << "result: " << *tree1.search(K0[7]) << endl;
+  //
+  // cout << "\nsearching for " << K0[11] << endl;
+  // cout << "should get " << V0[11] << endl;
+  // cout << "result: " << *tree1.search(K0[11]) << endl;
+  //
+  // cout << "\nsearching for -1" << endl;
+  // cout << "should get NULL" << endl;
+  // if (tree1.search(-1) == NULL)
+  //   cout << "result: NULL" << endl;
+  // else cout << "error" << endl;
+  //
+  // cout << "\nsearching for " << K1[7] << endl;
+  // cout << "should get " << V1[7] << endl;
+  // cout << "result: " << *tree1.search(K1[7]) << endl;
+  //
+  // cout << "\nsearching for " << K0[13] << endl;
+  // cout << "should get " << V0[13] << endl;
+  // cout << "result: " << *tree1.search(K0[13]) << endl;
+
   cout << "==========================\n" << endl;
 
-  cout << "there are " << tree0.size() << " elements in tree0;" << endl;
-
-  cout << "there are " << tree1.size() << " elements in tree1;" << endl;
+  for (int i = 0; i < 15; i++) {
+    cout << "rank of " << K0[i] << ": " << tree1.rank(K0[i]) << endl;
+    cout << "rank of " << K1[i] << ": " << tree1.rank(K1[i]) << endl;
+  }
 
   cout << "==========================\n" << endl;
 
-  cout << "\nsearching for " << K1[5] << endl;
-  cout << "should get " << V1[5] << endl;
-  cout << "result: " << *tree1.search(K1[5]) << endl;
+  cout << "rank of " << 7777 << ": " << tree1.rank(7777) << endl;
+  cout << "rank of " << 1234 << ": " << tree1.rank(1234) << endl;
 
-  cout << "\nsearching for " << K0[5] << endl;
-  cout << "should get " << V0[5] << endl;
-  cout << "result: " << *tree1.search(K0[5]) << endl;
-
-  cout << "\nsearching for " << K0[7] << endl;
-  cout << "should get " << V0[7] << endl;
-  cout << "result: " << *tree1.search(K0[7]) << endl;
-
-  cout << "\nsearching for " << K0[11] << endl;
-  cout << "should get " << V0[11] << endl;
-  cout << "result: " << *tree1.search(K0[11]) << endl;
-
-  cout << "\nsearching for -1" << endl;
-  cout << "should get NULL" << endl;
-  if (tree1.search(-1) == NULL)
-    cout << "result: NULL" << endl;
-  else cout << "error" << endl;
-
-  cout << "\nsearching for " << K1[7] << endl;
-  cout << "should get " << V1[7] << endl;
-  cout << "result: " << *tree1.search(K1[7]) << endl;
-
-  cout << "\nsearching for " << K0[13] << endl;
-  cout << "should get " << V0[13] << endl;
-  cout << "result: " << *tree1.search(K0[13]) << endl;
+  for (int i = 0; i < 15; i++) {
+    uniform_int_distribution<>
+    distrib(1000,9999);
+    int tmp = distrib(gen);
+    cout << "rank of " << tmp << ": " << tree1.rank(tmp) << endl;
+  }
 
   cout << "==========================\n" << endl;
 
