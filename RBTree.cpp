@@ -143,7 +143,7 @@ public:
   void preorder();              // working
   void inorder();               // working
   void postorder();             // working
-  void printk(int);             // makeMe
+  void printk(int);             // working
 
 // TESTING TESTING TESTING
   void view(                        // REMOVE ME !!!!!!!
