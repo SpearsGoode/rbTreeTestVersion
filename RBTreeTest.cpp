@@ -22,15 +22,19 @@ int main(int argc, char const *argv[]) {
   cout << "Starting RBTreeTest" << endl;
   cout << "==========================\n" << endl;
   cout << "test set: index: key | val" << endl;
-  int K0[15];
-  string V0[15] = {
+  int K0[30];
+  string V0[30] = {
     "clown", "car", "scuba", "donkey",
     "masha", "syd", "food", "target",
     "haley", "linux", "water", "bread",
-    "thirteen", "eleven", "simon"};
+    "thirteen", "eleven", "simon",
+    "flavor", "mars", "steep", "enemy",
+    "eject", "real", "grave", "desire",
+    "boom", "stand", "room", "wrong",
+    "risk", "spot", "jacket"};
   random_device rd;
   mt19937 gen(rd());
-  for (int i = 0; i < 15; i++) {
+  for (int i = 0; i < 30; i++) {
     uniform_int_distribution<>
     distrib(1000,9999);
     K0[i] = distrib(gen);
@@ -38,7 +42,7 @@ int main(int argc, char const *argv[]) {
     cout << i << ": [" << K0[i] << " | " << V0[i] << "]" <<  endl;
   } cout << "==========================\n" << endl;
 
-  RBTree<int, string> tree0(K0, V0, 15);
+  RBTree<int, string> tree0(K0, V0, 30);
 
   // cout << "==========================\n" << endl;
 
@@ -52,42 +56,46 @@ int main(int argc, char const *argv[]) {
 
   // cout << "==========================\n" << endl;
 
-  RBTree<int, string> tree2;
-  tree2.insert(7, "salmon");
-  tree2.insert(1, "forza");
-  tree2.insert(3, "mount");
-  tree2.insert(4, "blade");
-  tree2.insert(2, "orange");
-  tree2.insert(6, "pink");
-  tree2.insert(9, "purple");
+  // RBTree<int, string> tree2;
+  // tree2.insert(7, "salmon");
+  // tree2.insert(1, "forza");
+  // tree2.insert(3, "mount");
+  // tree2.insert(4, "blade");
+  // tree2.insert(2, "orange");
+  // tree2.insert(6, "pink");
+  // tree2.insert(9, "purple");
 
   // tree2.view(tree2.getroot(), "", true);
 
   // cout << "==========================\n" << endl;
 
-  tree2 = tree1;
+  // tree2 = tree1;
 
   // tree2.view(tree2.getroot(), "", true);
 
-  cout << "==========================\n" << endl;
+  // cout << "==========================\n" << endl;
 
-  int K1[15];
-  string V1[15] = {
+  int K1[30];
+  string V1[30] = {
     "dylan", "george", "kink", "diamond",
     "gme", "hand", "ape", "john",
     "phase", "manjaro", "link", "eth",
-    "btc", "twelve", "ocean"};
-  for (int i = 0; i < 15; i++) {
+    "btc", "twelve", "ocean",
+    "rip", "testing", "is", "hard",
+    "why", "did", "I", "pick",
+    "this", "major", "oof", "im",
+    "dead", "inside", "lmao"};
+  for (int i = 0; i < 30; i++) {
     uniform_int_distribution<>
     distrib(1000,9999);
     K1[i] = distrib(gen);
     cout << i+15 << ": [" << K1[i] << " | " << V1[i] << "]" <<  endl;
   } cout << "==========================\n" << endl;
 
-  for (int i = 0; i < 15; i++)
+  for (int i = 0; i < 30; i++)
     tree1.insert(K1[i], V1[i]);
 
-  cout << "==========================\n" << endl;
+
 
   // cout << "==========================\n" << endl;
   //
@@ -97,44 +105,44 @@ int main(int argc, char const *argv[]) {
 
   // cout << "==========================\n" << endl;
   //
-  // cout << "\nsearching for " << K1[5] << endl;
-  // cout << "should get " << V1[5] << endl;
-  // cout << "result: " << *tree1.search(K1[5]) << endl;
-  //
-  // cout << "\nsearching for " << K0[5] << endl;
-  // cout << "should get " << V0[5] << endl;
-  // cout << "result: " << *tree1.search(K0[5]) << endl;
-  //
-  // cout << "\nsearching for " << K0[7] << endl;
-  // cout << "should get " << V0[7] << endl;
-  // cout << "result: " << *tree1.search(K0[7]) << endl;
-  //
-  // cout << "\nsearching for " << K0[11] << endl;
-  // cout << "should get " << V0[11] << endl;
-  // cout << "result: " << *tree1.search(K0[11]) << endl;
-  //
-  // cout << "\nsearching for -1" << endl;
-  // cout << "should get NULL" << endl;
-  // if (tree1.search(-1) == NULL)
-  //   cout << "result: NULL" << endl;
-  // else cout << "error" << endl;
-  //
-  // cout << "\nsearching for " << K1[7] << endl;
-  // cout << "should get " << V1[7] << endl;
-  // cout << "result: " << *tree1.search(K1[7]) << endl;
-  //
-  // cout << "\nsearching for " << K0[13] << endl;
-  // cout << "should get " << V0[13] << endl;
-  // cout << "result: " << *tree1.search(K0[13]) << endl;
+  cout << "\nsearching for " << K1[5] << endl;
+  cout << "should get " << V1[5] << endl;
+  cout << "result: " << *tree1.search(K1[5]) << endl;
 
-  cout << "==========================\n" << endl;
+  cout << "\nsearching for " << K0[5] << endl;
+  cout << "should get " << V0[5] << endl;
+  cout << "result: " << *tree1.search(K0[5]) << endl;
 
-  for (int i = 0; i < 15; i++) {
-    cout << "rank of " << K0[i] << ": " << tree1.rank(K0[i]) << endl;
-    cout << "rank of " << K1[i] << ": " << tree1.rank(K1[i]) << endl;
-  }
+  cout << "\nsearching for " << K0[7] << endl;
+  cout << "should get " << V0[7] << endl;
+  cout << "result: " << *tree1.search(K0[7]) << endl;
 
-  cout << "==========================\n" << endl;
+  cout << "\nsearching for " << K0[11] << endl;
+  cout << "should get " << V0[11] << endl;
+  cout << "result: " << *tree1.search(K0[11]) << endl;
+
+  cout << "\nsearching for -1" << endl;
+  cout << "should get NULL" << endl;
+  if (tree1.search(-1) == NULL)
+    cout << "result: NULL" << endl;
+  else cout << "error" << endl;
+
+  cout << "\nsearching for " << K1[7] << endl;
+  cout << "should get " << V1[7] << endl;
+  cout << "result: " << *tree1.search(K1[7]) << endl;
+
+  cout << "\nsearching for " << K0[13] << endl;
+  cout << "should get " << V0[13] << endl;
+  cout << "result: " << *tree1.search(K0[13]) << endl;
+
+  // cout << "==========================\n" << endl;
+
+  // for (int i = 0; i < 15; i++) {
+  //   cout << "rank of " << K0[i] << ": " << tree1.rank(K0[i]) << endl;
+  //   cout << "rank of " << K1[i] << ": " << tree1.rank(K1[i]) << endl;
+  // }
+
+  // cout << "==========================\n" << endl;
 
   // cout << "rank of " << 7777 << ": " << tree1.rank(7777) << endl;
   // cout << "rank of " << 1234 << ": " << tree1.rank(1234) << endl;
@@ -146,9 +154,9 @@ int main(int argc, char const *argv[]) {
   //   cout << "rank of " << tmp << ": " << tree1.rank(tmp) << endl;
   // }
 
-  for (int i = 1; i <= 30; i++) {
-    cout << "key at rank " << i << ": " << tree1.select(i) << endl;
-  }
+  // for (int i = 1; i <= 30; i++) {
+  //   cout << "key at rank " << i << ": " << tree1.select(i) << endl;
+  // }
 
   // cout << "==========================\n" << endl;
   //
@@ -188,7 +196,32 @@ int main(int argc, char const *argv[]) {
 
   cout << "==========================\n" << endl;
 
-  tree1.printk(5);
+  // tree1.printk(5);
+
+  tree1.view(tree1.getroot(), "", true);
+
+  // for (int i = 0; i < 30; i++) {
+  //   uniform_int_distribution<>
+  //   distrib(0,14);
+  //   int tmp = distrib(gen);
+  //   cout << "results:\n" << tree1.remove(K0[tmp]) << endl;
+  //   // tree1.view(tree1.getroot(), "", true);
+  //   cout << "----\n" << endl;
+  //   cout << "results:\n" << tree1.remove(K1[tmp]) << endl;
+  //   // tree1.view(tree1.getroot(), "", true);
+  //   cout << "----\n" << endl;
+  //
+  // }
+  // tree1.view(tree1.getroot(), "", true);
+  cout << "==========================\n" << endl;
+
+  // cout << "key to delete: " << endl;
+  // int sel;
+  // cin >> sel;
+  //
+  // cout << "results:\n" << tree1.remove(sel) << endl;
+  // tree1.view(tree1.getroot(), "", true);
+  // cout << "----\n" << endl;
 
 
   return 0;
