@@ -105,35 +105,35 @@ int main(int argc, char const *argv[]) {
 
   // cout << "==========================\n" << endl;
   //
-  cout << "\nsearching for " << K1[5] << endl;
-  cout << "should get " << V1[5] << endl;
-  cout << "result: " << *tree1.search(K1[5]) << endl;
-
-  cout << "\nsearching for " << K0[5] << endl;
-  cout << "should get " << V0[5] << endl;
-  cout << "result: " << *tree1.search(K0[5]) << endl;
-
-  cout << "\nsearching for " << K0[7] << endl;
-  cout << "should get " << V0[7] << endl;
-  cout << "result: " << *tree1.search(K0[7]) << endl;
-
-  cout << "\nsearching for " << K0[11] << endl;
-  cout << "should get " << V0[11] << endl;
-  cout << "result: " << *tree1.search(K0[11]) << endl;
-
-  cout << "\nsearching for -1" << endl;
-  cout << "should get NULL" << endl;
-  if (tree1.search(-1) == NULL)
-    cout << "result: NULL" << endl;
-  else cout << "error" << endl;
-
-  cout << "\nsearching for " << K1[7] << endl;
-  cout << "should get " << V1[7] << endl;
-  cout << "result: " << *tree1.search(K1[7]) << endl;
-
-  cout << "\nsearching for " << K0[13] << endl;
-  cout << "should get " << V0[13] << endl;
-  cout << "result: " << *tree1.search(K0[13]) << endl;
+  // cout << "\nsearching for " << K1[5] << endl;
+  // cout << "should get " << V1[5] << endl;
+  // cout << "result: " << *tree1.search(K1[5]) << endl;
+  //
+  // cout << "\nsearching for " << K0[5] << endl;
+  // cout << "should get " << V0[5] << endl;
+  // cout << "result: " << *tree1.search(K0[5]) << endl;
+  //
+  // cout << "\nsearching for " << K0[7] << endl;
+  // cout << "should get " << V0[7] << endl;
+  // cout << "result: " << *tree1.search(K0[7]) << endl;
+  //
+  // cout << "\nsearching for " << K0[11] << endl;
+  // cout << "should get " << V0[11] << endl;
+  // cout << "result: " << *tree1.search(K0[11]) << endl;
+  //
+  // cout << "\nsearching for -1" << endl;
+  // cout << "should get NULL" << endl;
+  // if (tree1.search(-1) == NULL)
+  //   cout << "result: NULL" << endl;
+  // else cout << "error" << endl;
+  //
+  // cout << "\nsearching for " << K1[7] << endl;
+  // cout << "should get " << V1[7] << endl;
+  // cout << "result: " << *tree1.search(K1[7]) << endl;
+  //
+  // cout << "\nsearching for " << K0[13] << endl;
+  // cout << "should get " << V0[13] << endl;
+  // cout << "result: " << *tree1.search(K0[13]) << endl;
 
   // cout << "==========================\n" << endl;
 
@@ -194,25 +194,25 @@ int main(int argc, char const *argv[]) {
   //   else cout << K1[i] << " has no successor" << endl;
   // }
 
-  cout << "==========================\n" << endl;
+  // cout << "==========================\n" << endl;
 
   // tree1.printk(5);
 
   tree1.view(tree1.getroot(), "", true);
 
-  // for (int i = 0; i < 30; i++) {
-  //   uniform_int_distribution<>
-  //   distrib(0,14);
-  //   int tmp = distrib(gen);
-  //   cout << "results:\n" << tree1.remove(K0[tmp]) << endl;
-  //   // tree1.view(tree1.getroot(), "", true);
-  //   cout << "----\n" << endl;
-  //   cout << "results:\n" << tree1.remove(K1[tmp]) << endl;
-  //   // tree1.view(tree1.getroot(), "", true);
-  //   cout << "----\n" << endl;
-  //
-  // }
-  // tree1.view(tree1.getroot(), "", true);
+  for (int i = 0; i < 30; i++) {
+    uniform_int_distribution<>
+    distrib(0,14);
+    int tmp = distrib(gen);
+    cout << "results:\n" << tree1.remove(K0[tmp]) << endl;
+    // tree1.view(tree1.getroot(), "", true);
+    cout << "----\n" << endl;
+    cout << "results:\n" << tree1.remove(K1[tmp]) << endl;
+    // tree1.view(tree1.getroot(), "", true);
+    cout << "----\n" << endl;
+
+  }
+  tree1.view(tree1.getroot(), "", true);
   cout << "==========================\n" << endl;
 
   // cout << "key to delete: " << endl;

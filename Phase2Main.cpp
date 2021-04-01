@@ -29,9 +29,12 @@ int main(){
 	T2.inorder();
 	//Should output	A B C D E F G H I K\n
 
+	T2.view(T2.getroot(), "", true);   //MINE ||  REMOVE ME
 
 	cout << T2.remove("D") << endl;
 	//Should output 1
+
+	T2.view(T2.getroot(), "", true);   //MINE ||  REMOVE ME
 
 	T2.preorder();
 	//Should output F C B A E H G I K\n

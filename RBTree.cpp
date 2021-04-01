@@ -141,24 +141,24 @@ class RBTree {
     RBNode<keyT, valT>*,
     RBNode<keyT, valT>*
   );
-  RBNode<keyT, valT> *del(      // test
+  void del(                     // test
     RBNode<keyT, valT>*
   );
-  RBNode<keyT, valT> *delOld(   // test
+  RBNode<keyT, valT> *delOld(   // old
     RBNode<keyT, valT>*
   );
-  void fixRent(                 // test
+  void fixPtr(                 // test
     RBNode<keyT, valT>*,
     RBNode<keyT, valT>*
   );
   void fixAdd(                  // working
     RBNode<keyT, valT>*
   );
-  void fixDel(                  // working
+  void fixDel(                  // test
     RBNode<keyT, valT>*,
     RBNode<keyT, valT>*
   );
-  void fixDelOld(               // working
+  void fixDelOld(               // old
     RBNode<keyT, valT>*,
     RBNode<keyT, valT>*
   );
@@ -177,7 +177,7 @@ public:
   valT *search(keyT);           // working
   void insert(keyT, valT);      // working
   int remove(keyT);             // test
-  int removeOld(keyT);          // test
+  int removeOld(keyT);          // old
   int rank(keyT);               // too slow
   keyT select(int);             // too slow
   keyT *successor(keyT);        // working
@@ -293,12 +293,12 @@ removeOld(keyT k) {
     rent = rent->p;
   }
     // delete node
-  node = del(node);
+  node = delOld(node);
     // return 1 if node is black
   if ((node && node->black != 2)
   || !pColor)
     return 1;
-  fixDel(node, rent);
+  fixDelOld(node, rent);
   return 1;
 }
 
@@ -306,35 +306,24 @@ removeOld(keyT k) {
 template <typename keyT, typename valT>
 int RBTree<keyT, valT>::
 remove(keyT k) {
-  // return 0 if tree is empty
-if (!count) return 0;
-  // find node
-RBNode<keyT, valT> *node;
-node = find(root, k);
-  // return 0 if it was not found
-if (!node) return 0;
-  // return 1 if only root remains
---count;
-if (!count) return 1;
-  // set parent/color of node to be deleted
-int pColor = node->black;
-RBNode<keyT, valT> *rent;
-if (!node->r || !node->l) {
-  rent = node->p;
-  pColor = node->black;
-} else {
-  rent = getMin(node->r);
-  pColor = rent->black;
-  rent = rent->p;
-}
-  // delete node
-node = del(node);
-  // return 1 if node is black
-if ((node && node->black != 2)
-|| !pColor)
+    // return 0 if tree is empty
+  if (!count) return 0;
+
+    // find node
+  RBNode<keyT, valT> *node;
+  node = find(root, k);
+    // return 0 if it was not found
+  if (!node) return 0;
+    // otherwise decrease tree size
+  else --count;
+
+    // return 1 if only root remains
+    //   [will be replaced later]
+  if (!count) return 1;
+
+    // delete node
+  del(node);
   return 1;
-fixDel(node, rent);
-return 1;
 }
 
   // Returns Key Rank
@@ -639,21 +628,21 @@ delOld(RBNode<keyT, valT> *node) {
   if (node->leaf()) {
     cout << "node->leaf()" << endl;
     nxt = nullptr;
-    fixRent(node, nxt);
+    fixPtr(node, nxt);
     delete node;
     return nxt;
   }
   if (!node->r) {
     nxt = node->l;
     nxt->black += node->black;
-    fixRent(node, nxt);
+    fixPtr(node, nxt);
     delete node;
     return nxt;
   }
   if (!node->l) {
     nxt = node->r;
     nxt->black += node->black;
-    fixRent(node, nxt);
+    fixPtr(node, nxt);
     delete node;
     return nxt;
   }
@@ -666,48 +655,53 @@ delOld(RBNode<keyT, valT> *node) {
 
 // Delete Node @ key
 template <typename keyT, typename valT>
-RBNode<keyT, valT> *RBTree<keyT, valT>::
+void RBTree<keyT, valT>::
 del(RBNode<keyT, valT> *node) {
-cout << "deleting " << node->key << endl;
-RBNode<keyT, valT> *nxt;
-if (node->leaf()) {
-  cout << "node->leaf()" << endl;
+  bool fixNeeded;
+  fixNeeded = node->black;
+  RBNode<keyT, valT> *nxt, *rent;
   nxt = nullptr;
-  fixRent(node, nxt);
-  delete node;
-  return nxt;
-}
-if (!node->r) {
-  nxt = node->l;
-  nxt->black += node->black;
-  fixRent(node, nxt);
-  delete node;
-  return nxt;
-}
-if (!node->l) {
-  nxt = node->r;
-  nxt->black += node->black;
-  fixRent(node, nxt);
-  delete node;
-  return nxt;
-}
-cout << "fSuccessor" << endl;
-nxt = getMin(node->r);
-node->key = nxt->key;
-node->val = nxt->val;
-return del(nxt);
+  if (!node->l) {
+    nxt = node->r;
+    rent = node->p;
+    fixPtr(node, nxt);
+  }
+  else if (!node->r) {
+    nxt = node->l;
+    rent = node->p;
+    fixPtr(node, nxt);
+  } else {
+    RBNode<keyT, valT> *pSor;
+    pSor = getMax(node->l);
+    fixNeeded = pSor->black;
+    nxt = pSor->l;
+    if(pSor->p == node) {
+      if (nxt)
+        nxt->p = pSor;
+      rent = pSor;
+    } else {
+      rent = pSor->p;
+      fixPtr(pSor, nxt);
+      pSor->l = node->l;
+      pSor->l->p = pSor;
+    }
+    fixPtr(node, pSor);
+    pSor->r = node->r;
+    pSor->r->p = pSor;
+    pSor->black = node->black;
+  } if (fixNeeded) fixDel(nxt, rent);
 }
 
   // Fixes Parent Pointers During Del()
 template <typename keyT, typename valT>
 void RBTree<keyT, valT>::
-fixRent(RBNode<keyT, valT> *node, RBNode<keyT, valT> *nxt) {
-  if (node->rChild())
-    node->p->r = nxt;
-  if (node->lChild())
+fixPtr(RBNode<keyT, valT> *node, RBNode<keyT, valT> *nxt) {
+  if (!node->p)
+    root = nxt;
+  else if (node->lChild())
     node->p->l = nxt;
-  if (nxt)
-    nxt->p = node->p;
+  else node->p->r = nxt;
+  if (nxt) nxt->p = node->p;
 }
 
   // Fixes Any Violations Add() Created
@@ -897,135 +891,84 @@ fixDelOld(RBNode<keyT, valT> *node, RBNode<keyT, valT> *rent) {
   } root->black = 1;
 }
 
-// Fixes Any Violations Del() Created
+  // Fixes Any Violations Del() Created
 template <typename keyT, typename valT>
 void RBTree<keyT, valT>::
 fixDel(RBNode<keyT, valT> *node, RBNode<keyT, valT> *rent) {
-  cout << "fixDel()" << endl;                 //TEST TEST
   RBNode<keyT, valT> *sib;
-  sib = nullptr;
-  bool dBlack = true;
-
-  while (((!node && dBlack)
-  || (node && node->black == 2))
-  && node != root) {
-    cout << " in loop" << endl;
-
-  //test v
-    if (node) {
-      cout << "------>node->key: " << node->key << endl;
-    } else cout << "------>!node" << endl;
-  //test ^
-
-    if (node)
-      rent = node->p;
-
-  //test v
-      if (rent) {
-        cout << "------>rent->key: " << rent->key << endl;
-      } else cout << "------>!rent" << endl;
-  //test ^
-
+  while (node != root &&
+  (!node || node->black)) {
     if (node == rent->l) {
-      cout << "  sib right child" << endl;
       sib = rent->r;
-
-  //test v
-      if (sib) {
-        cout << "------>sib->key: " << sib->key << endl;
-      } else cout << "------>!sib" << endl;
-  //test ^
-
-      if (!sib->black) {
-        cout << "   sib red" << endl;
+      if (sib->red()) {
         sib->black = 1;
         rent->black = 0;
         rotateL(rent);
+        sib = rent->r;
+      }
+      if ((!sib->l || sib->l->black)
+      && (!sib->r || sib->r->black)) {
+        sib->black = 0;
+        node = rent;
+        rent = node->p;
       } else {
-        cout << "   sib black" << endl;
-        if ((!sib->l || (sib->l && sib->l->black))
-        && (!sib->r || (sib->r && sib->r->black))) {
-          cout << "    no red children" << endl;
+        if (!sib->r || sib->r->black) {
+          if (sib->l) sib->l->black = 1;
           sib->black = 0;
-          if (rent->black == 0)
-            rent->black = 1;
-          else
-            rent->black = 2;
-          node = rent;
-        } else {
-          if (!sib->r || (sib->r && sib->r->black)) {
-              cout << "     sib right child black" << endl;
-            if (sib->l)
-              sib->l->black = 1;
-            sib->black = 0;
-            rotateR(sib);
-            sib = rent->r;
-          }
-          cout << "     sib left child black" << endl;
-          sib->black = rent->black;
-          rent->black = 1;
-          if (sib->r)
-            sib->r->black = 1;
-          rotateL(rent);
-          break;
+          rotateR(sib);
+          sib = rent->r;
         }
+        sib->black = rent->black;
+        rent->black = 1;
+        if (sib->r) sib->r->black = 1;
+        rotateL(rent);
+        node = root;
       }
     } else {
-      cout << "  sib left child" << endl;
       sib = rent->l;
-      if (!sib->black) {
-        cout << "   sib red" << endl;
+      if (sib->red()) {
         sib->black = 1;
         rent->black = 0;
         rotateR(rent);
+        sib = rent->l;
+      }
+      if ((!sib->r || sib->r->black)
+      && (!sib->l || sib->l->black)) {
+        sib->black = 0;
+        node = rent;
+        rent = node->p;
       } else {
-        cout << "   sib black" << endl;
-        if ((!sib->l || (sib->l && sib->l->black))
-        && (!sib->r || (sib->r && sib->r->black))) {
-          cout << "    no red children" << endl;
+        if (!sib->l || sib->l->black) {
+          if (sib->r) sib->r->black = 1;
           sib->black = 0;
-          if (rent->black == 0)
-            rent->black = 1;
-          else
-            rent->black = 2;
-          node = rent;
-        } else {
-          if (!sib->l ||(sib->l && sib->l->black)) {
-              cout << "     sib left child black" << endl;
-            if (sib->r)
-              sib->r->black = 1;
-            sib->black = 0;
-            rotateL(sib);
-            sib = rent->l;
-          }
-          cout << "     sib right child black" << endl;
-          sib->black = rent->black;
-          rent->black = 1;
-          if (sib->l)
-            sib->l->black = 1;
-          rotateR(rent);
-          break;
+          rotateL(sib);
+          sib = rent->l;
         }
+        sib->black = rent->black;
+        rent->black = 1;
+        if (sib->l) sib->l->black = 1;
+        rotateR(rent);
+        node = root;
       }
     }
-  } root->black = 1;
+  } node->black = 1;
 }
-
 
   // Rotates Nodes Left
 template <typename keyT, typename valT>
 void RBTree<keyT, valT>::
 rotateL(RBNode<keyT, valT> *node) {
     // cout << "     rotating left" << endl;  //TEST
-  RBNode<keyT, valT> *tmp = node->r;
+  RBNode<keyT, valT> *tmp;
+  tmp = node->r;
   node->r = tmp->l;
-  if (tmp->l != nullptr)
+  if (tmp->l)
     tmp->l->p = node;
   tmp->p = node->p;
-  if (node->p == nullptr)
+  if (!node->p)
     root = tmp;
   else
-    if (node == node->p->l)
+    if (node->lChild())
       node->p->l = tmp;
   else node->p->r = tmp;
   tmp->l = node;
@@ -1037,15 +980,16 @@ template <typename keyT, typename valT>
 void RBTree<keyT, valT>::
 rotateR(RBNode<keyT, valT> *node) {
     // cout << "     rotating right" << endl; ///TEST
-  RBNode<keyT, valT> *tmp = node->l;
+  RBNode<keyT, valT> *tmp;
+  tmp = node->l;
   node->l = tmp->r;
-  if (tmp->r != nullptr)
+  if (tmp->r)
     tmp->r->p = node;
   tmp->p = node->p;
-  if (node->p == nullptr)
+  if (!node->p)
     root = tmp;
   else
-    if (node == node->p->r)
+    if (node->rChild())
       node->p->r = tmp;
   else node->p->l = tmp;
   tmp->r = node;
