@@ -129,19 +129,51 @@ int main() {
 
 	cout << "\n\t____3rd Challenge____\n" << endl;
 
-	RBTree<int,double> T3;
+	int treeSize = 7777777;
+	RBTree<int,int> T3;
 
-	for (int i=3131313; i > 0; i--) {
-		if (i % 313131 == 0) {
-			if (i > 3131313/10)
-				cout << "\t    " << 10+((3131313-i)/31313) << "% complete" << endl;
+	for (int i = treeSize; i >= 0; i--) T3.insert(i,treeSize-i);
+	for (int i = 1; i < treeSize; i++) {
+		if (i % 777777 == 0) {
+			if (i > 7777700/10)
+				cout << "\t    " << i/77777 << "% complete" << endl;
+			else cout << "\t        DONE" << endl;
+		}
+		if(T3.rank(i) != i+1) rankErr++;
+		if(T3.select(i) != i-1) selectErr++;
+		if(*(T3.search(i)) != treeSize-i) searchErr++;
+	}
+
+	cout << "\n\t ";
+	cout << rankErr << " Rank Errors\n\t ";
+	cout << selectErr << " Select Errors\n\t ";
+	cout << searchErr << " Search Errors\n" << endl;
+
+	totRankErr += rankErr;
+	rankErr = 0;
+	totSelectErr += selectErr;
+	selectErr = 0;
+	totSearchErr += searchErr;
+	searchErr = 0;
+
+	cout << "\n\t____4th Challenge____\n" << endl;
+
+	RBTree<int,double> T4;
+
+	for (int i=31313131; i > 0; i--) {
+		if (i % 3131313 == 0) {
+			if (i > 31313131/10)
+				cout << "\t    " << 10+((31313131-i)/313131) << "% complete" << endl;
 			else cout << "\t        DONE" << endl;
 		}
 		uniform_int_distribution<>
 		intDis(10000000,99999999);
 		uniform_real_distribution<>
 		realDis(0.0001,9999.9999);
-		T3.insert(intDis(gen), realDis(gen));
+		T4.insert(intDis(gen), realDis(gen));
+		uniform_int_distribution<>
+		distrib(1, 1000000);
+		tmp = distrib(gen);
 	}
 
 	cout << "\n\t       Hol Up\n\t  it Didn't Crash?\n" << endl;
