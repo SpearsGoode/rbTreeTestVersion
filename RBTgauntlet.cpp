@@ -186,15 +186,14 @@ int main() {
 
 	cout << "\n\t   Copying Tree..." << endl;
 
-	T4 = T5;
+	T5 = T4;
 
 	cout << "\t   Testing Copy...\n" << endl;
 
-	for (int i=0; i < 31313; i++) {
-		if (i % 3131 == 0) {
-			if (i < 31310)
-				cout << "\t    " << i/310 << "% complete" << endl;
-			else cout << "\t        DONE" << endl;
+	for (int i=0; i < 3131313; i++) {
+		if (i % 313130 == 0) {
+			if (i < 3100000)
+				cout << "\t    " << i/31313+10 << "% complete" << endl;
 		}
 
 		uniform_int_distribution<>
@@ -228,8 +227,8 @@ int main() {
 
 	int totErrors = totRankErr + totSelectErr + totSearchErr;
 
-	cout << "\n\t ";
-	cout << totErr << " TOTAL ERRORS\n\t ";
+	cout << "\n\t  ";
+	cout << totErrors << " TOTAL ERRORS\n\t ";
 
 	if (!totErrors) yas();
 
