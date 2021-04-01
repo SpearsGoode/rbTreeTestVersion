@@ -1,5 +1,5 @@
 all: test phase2 final gauntlet
-	@echo -e "\n		Nice Work\n"
+	@echo -e "\n"
 
 gauntlet: final
 	@echo -e "\n	  compiling RBTgauntlet.cpp"
