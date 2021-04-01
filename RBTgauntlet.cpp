@@ -129,13 +129,16 @@ int main() {
 
 	cout << "\n\t____3rd Challenge____\n" << endl;
 
+	cout << "\t Initalizing Tree...\n" << endl;
+	cout << "\t     Testing...\n" << endl;
+
 	int treeSize = 7777777;
 	RBTree<int,int> T3;
 
 	for (int i = treeSize; i >= 0; i--) T3.insert(i,treeSize-i);
 	for (int i = 1; i < treeSize; i++) {
 		if (i % 777777 == 0) {
-			if (i > 7777700/10)
+			if (i < 7770000)
 				cout << "\t    " << i/77777 << "% complete" << endl;
 			else cout << "\t        DONE" << endl;
 		}
