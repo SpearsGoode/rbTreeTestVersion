@@ -1,4 +1,4 @@
-all: test phase2 final #gauntlet
+all: test phase2 final gauntlet
 	@echo -e "\n		Nice Work\n"
 
 gauntlet: final

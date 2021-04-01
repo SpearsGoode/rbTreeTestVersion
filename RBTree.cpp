@@ -33,6 +33,7 @@ struct RBNode {
   int size;
   RBNode();
   RBNode(keyT, valT);
+  RBNode(RBNode &src);
   bool leaf();
   bool red();
   bool rChild();
@@ -46,7 +47,7 @@ struct RBNode {
  /* // RBNode Public Functions /// RBNode Public Functions // */
 /* //=====================================================// */
 
-  //RBNode Default Constructor [for root node]
+  // RBNode Default Constructor [for root node]
 template <typename keyT, typename valT>
 RBNode<keyT, valT>::
 RBNode() {
@@ -55,7 +56,7 @@ RBNode() {
   size = 0;
 }
 
-  //RBNode Key/Val Constructor
+  // RBNode Key/Val Constructor
 template <typename keyT, typename valT>
 RBNode<keyT, valT>::
 RBNode(keyT k, valT v) {
@@ -64,6 +65,20 @@ RBNode(keyT k, valT v) {
   black = 0;
   size = 1;
 }
+
+  // RBNode Copy Constructor
+template <typename keyT, typename valT>
+RBNode<keyT, valT>::
+RBNode(RBNode &src) {
+  this->key = src.key;
+  this->val = src.val;
+  this->p = nullptr;
+  this->l = nullptr;
+  this->r = nullptr;
+  this->black = src.black;
+  this->size = src.size;
+}
+
 
   // Returns True If Leaf Node
 template <typename keyT, typename valT>
@@ -139,7 +154,11 @@ class RBTree {
   void trav(int&,
     RBNode<keyT, valT>*
   );
-  void clone(
+  RBNode<keyT, valT> *clone(
+    RBNode<keyT, valT>*,
+    RBNode<keyT, valT>*
+  );
+  void cloneOld(
     RBNode<keyT, valT>*
   );
   void destroy(
@@ -184,9 +203,9 @@ class RBTree {
 public:
   RBTree() {mkRoot();}
   RBTree(keyT*, valT*, int);
-  RBTree(RBTree&);                // improve
+  RBTree(RBTree&);
   ~RBTree() {destroy(root);}
-  RBTree& operator=(RBTree);      // improve
+  RBTree& operator=(RBTree);
   valT *search(keyT);
   void insert(keyT, valT);
   int remove(keyT);
@@ -227,22 +246,19 @@ RBTree(keyT *k, valT *v, int s) {
   // RBTree Copy Constructor
 template <typename keyT, typename valT>
 RBTree<keyT, valT>::
-RBTree(RBTree& src) {
+RBTree(RBTree &src) {
   mkRoot();
-  insert(src.root->key, src.root->val);
     // recursivly duplicate each node
-  clone(src.root);
+  this->root = clone(this->root, src.root);
 }
 
-  // Coppy Assignment Operator
+  // RBTree Copy Assignment Operator
 template <typename keyT, typename valT>
 RBTree<keyT, valT>& RBTree<keyT, valT>::
 operator=(RBTree src) {
     // recursivly delete & duplicate each node
   destroy(this->root);
-  mkRoot();
-  insert(src.root->key, src.root->val);
-  clone(src.root);
+  this->root = clone(this->root, src.root);
   return *this;
 }
 
@@ -276,7 +292,7 @@ insert(keyT k, valT v) {
     fixAdd(node);
 }
 
-// Remove Node @ Key Location
+  // Remove Node @ Key Location
 template <typename keyT, typename valT>
 int RBTree<keyT, valT>::
 remove(keyT k) {
@@ -503,13 +519,29 @@ trav(int &i, RBNode<keyT, valT> *node) {
   // Recursivly Duplicates RBNodes
 template <typename keyT, typename valT>
 void RBTree<keyT, valT>::
-clone(RBNode<keyT, valT> *src) {
+cloneOld(RBNode<keyT, valT> *src) {
   if (!src) return;
   if (src->l)
     insert(src->l->key, src->l->val);
   if (src->r)
     insert(src->r->key, src->r->val);
   clone(src->r); clone(src->l);
+}
+
+  // Recursivly Duplicates RBNodes
+template <typename keyT, typename valT>
+RBNode<keyT, valT> *RBTree<keyT, valT>::
+clone(RBNode<keyT, valT> *node, RBNode<keyT, valT> *src) {
+  node = new RBNode<keyT, valT>(*src);
+  if (src->l) {
+    node->l = clone(node->l, src->l);
+    node->l->p = node;
+  }
+  if (src->r) {
+    node->r = clone(node->r, src->r);
+    node->r->p = node;
+  }
+  return node;
 }
 
   // Recursivly Deletes RBNodes

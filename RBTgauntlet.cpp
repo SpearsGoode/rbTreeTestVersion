@@ -22,7 +22,7 @@ void yas() {
 	cout << "   \\ \\  \\|\\  \\ \\  \\   \\ \\  \\ \\ \\  \\____\\ \\  \\ \\  \\\n";
 	cout << "    \\ \\_______\\ \\__\\   \\ \\__\\ \\ \\_______\\ \\__\\ \\__\\\n";
 	cout << "     \\|_______|\\|__|    \\|__|  \\|_______|\\|__|\\|__|\n";
-	cout << "\n  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+	cout << "\n  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 }
 
 int main() {
@@ -30,9 +30,13 @@ int main() {
 	random_device rd;
   mt19937 gen(rd());
 	int rankErr = 0;
+	int totRankErr = 0;
 	int selectErr = 0;
+	int totSelectErr = 0;
 	int searchErr = 0;
+	int totSearchErr = 0;
 	int tmp = 0;
+	int offSet = 0;
 
 	cout << "\n\trunning the gauntlet\n" << endl;
 
@@ -48,11 +52,11 @@ int main() {
 			uniform_int_distribution<>
 			distrib(1,i);
 			tmp = distrib(gen);
-			// cout << "removing " << tmp << endl;
-			X.remove(tmp);
+			if (X.remove(tmp))
+				++offSet;
 		}
-		if(X.rank(i) != i) ++rankErr;
-		if(X.select(i) != i) ++selectErr;
+		if(X.rank(i) != i-offSet) ++rankErr;
+		if(X.select(i-offSet) != i) ++selectErr;
 		if(*(X.search(i)) != i) ++searchErr;
 	}
 	cout << "\n\t ";
@@ -60,8 +64,8 @@ int main() {
 	cout << selectErr << " Select Errors\n\t ";
 	cout << searchErr << " Search Errors\n" << endl;
 
-	if (rankErr < 70
-	&& selectErr < 70
+	if (!rankErr
+	&& !selectErr
 	&& !searchErr)
 		yas();
 
