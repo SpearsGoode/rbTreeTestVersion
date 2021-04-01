@@ -29,7 +29,7 @@ int main(){
 	T2.inorder();
 	//Should output	A B C D E F G H I K\n
 
-	// cout << T2.remove("D") << endl;
+	cout << T2.remove("D") << endl;
 	//Should output 1
 
 	T2.preorder();
@@ -38,10 +38,10 @@ int main(){
 	T2.inorder();
 	//Should output	A B C E F G H I K\n
 
-	// T2.printk(3);
+	T2.printk(3);
 	//Should output	A B C\n
 
-	// cout << T2.remove("J") << endl;
+	cout << T2.remove("J") << endl;
 	//Should output 0
 
 	cout <<T2.rank("G") << endl;
@@ -53,18 +53,13 @@ int main(){
 	cout <<*(T1.predecessor("C"))<<endl;
 	//Should output B
 
-
-
-  //   RBTree<int,int> X;
-	// for (int i=1;i<1001000;i++) X.insert(i,i);
-	// for (int i=1;i<1001000;i++) {
-	// 	if (i % 10000 == 0) cout << "i: " << i << endl;
-	// 	if(X.rank(i) != i) cout << "Rank error" << endl;
-	// 	if(X.select(i) != i) cout << "Select error" << endl;
-	// 	if(*(X.search(i)) != i) cout << "Search error" << endl;
-	// }
+    RBTree<int,int> X;
+	for (int i=1;i<1001000;i++) X.insert(i,i);
+	for (int i=1;i<1001000;i++) {
+		if(X.rank(i) != i) cout << "Rank error" << endl;
+		if(X.select(i) != i) cout << "Select error" << endl;
+		if(*(X.search(i)) != i) cout << "Search error" << endl;
+	}
 	//Should be no output and should take seconds, not minutes
-
-	cout << "Remember to enable test cases" << endl;
 	return 0;
 }
