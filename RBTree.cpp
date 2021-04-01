@@ -264,7 +264,9 @@ operator=(RBTree src) {
 template <typename keyT, typename valT>
 valT* RBTree<keyT, valT>::
 search(keyT k) {
+    // find the node
   RBNode<keyT, valT> *loc = find(root, k);
+    // if found return node->val
   if (loc) return &loc->val;
   else return NULL;
 }
@@ -319,8 +321,10 @@ template <typename keyT, typename valT>
 int RBTree<keyT, valT>::
 rank(keyT k) {
   RBNode<keyT, valT> *node;
+    // find node
   node = find(root, k);
   if (!node) return 0;
+    // calculate rank
   else return tally(node);
 }
 
@@ -329,8 +333,10 @@ template <typename keyT, typename valT>
 keyT RBTree<keyT, valT>::
 select(int i) {
   RBNode<keyT, valT> *node;
+    // handle out of bounds error
   if (i > root->size)
     i = root->size;
+    // find node at index
   node = dex(root, i);
   return node->key;
 }
@@ -340,10 +346,13 @@ template <typename keyT, typename valT>
 keyT* RBTree<keyT, valT>::
 successor(keyT k) {
   RBNode<keyT, valT> *node;
+    // find node @ key
   node = find(root, k);
   if (!node) return NULL;
+    // find next largest
   node = up1(node);
   if (node)
+      //return reference to key
     return &node->key;
   else return NULL;
 }
@@ -353,10 +362,13 @@ template <typename keyT, typename valT>
 keyT* RBTree<keyT, valT>::
 predecessor(keyT k) {
   RBNode<keyT, valT> *node;
+    // find node @ key
   node = find(root, k);
   if (!node) return NULL;
+    // find next smallest
   node = dn1(node);
   if (node)
+      //return reference to key
     return &node->key;
   else return NULL;
 }
@@ -385,7 +397,7 @@ postorder() {
   cout << endl;
 }
 
-  // Prints Smallest Keys
+  // Prints K Smallest Keys
 template <typename keyT, typename valT>
 void RBTree<keyT, valT>::
 printk(int k) {
@@ -437,7 +449,8 @@ mkRoot() {
 template <typename keyT, typename valT>
 RBNode<keyT, valT> *RBTree<keyT, valT>::
 getMin(RBNode<keyT, valT> *node) {
-  while (node->l) node = node->l;
+  while (node->l)
+    node = node->l;
   return node;
 }
 
@@ -445,7 +458,8 @@ getMin(RBNode<keyT, valT> *node) {
 template <typename keyT, typename valT>
 RBNode<keyT, valT> *RBTree<keyT, valT>::
 getMax(RBNode<keyT, valT> *node) {
-  while (node->r) node = node->r;
+  while (node->r)
+    node = node->r;
   return node;
 }
 
@@ -481,17 +495,17 @@ void RBTree<keyT, valT>::
 trav(char o, RBNode<keyT, valT> *node) {
   if (node) {
     switch (o) {
-      case '<':
+      case '<': // preorder
         cout << node->key << ' ';
         trav(o, node->l);
         trav(o, node->r);
         break;
-      case 'v':
+      case 'v': // inorder
         trav(o, node->l);
         cout << node->key << ' ';
         trav(o, node->r);
         break;
-      case '>':
+      case '>': // post order
         trav(o, node->l);
         trav(o, node->r);
         cout << node->key << ' ';
@@ -504,6 +518,7 @@ trav(char o, RBNode<keyT, valT> *node) {
 template <typename keyT, typename valT>
 void RBTree<keyT, valT>::
 trav(int &i, RBNode<keyT, valT> *node) {
+    // inorder trav but stops when i == 0
   if (i && node) {
     trav(i, node->l);
     if (i) {
@@ -535,9 +550,9 @@ template <typename keyT, typename valT>
 void RBTree<keyT, valT>::
 destroy(RBNode<keyT, valT> *node) {
   if (!node) return;
-  if (node->l != nullptr)
+  if (node->l)
     destroy(node->l);
-  if (node->r != nullptr)
+  if (node->r)
     destroy(node->r);
   delete node;
 }
@@ -591,8 +606,9 @@ tally(RBNode<keyT, valT> *node) {
 template <typename keyT, typename valT>
 RBNode<keyT, valT> *RBTree<keyT, valT>::
 add(RBNode<keyT, valT> *node, RBNode<keyT, valT> *tree) {
-  if (tree == nullptr) return node;
-  if (tree != root) ++tree->size;
+  if (!tree) return node;
+  if (tree != root)
+    ++tree->size;
   if (node->key < tree->key) {
     tree->l = add(node, tree->l);
     tree->l->p = tree;
@@ -610,6 +626,7 @@ del(RBNode<keyT, valT> *node) {
   fixNeeded = node->black;
   RBNode<keyT, valT> *nxt, *rent;
   nxt = nullptr;
+    // if !2 children
   if (!node->l) {
     nxt = node->r;
     rent = node->p;
@@ -622,6 +639,7 @@ del(RBNode<keyT, valT> *node) {
     fixSize(rent);
     fixPtr(node, nxt);
   } else {
+      // find predecessor
     RBNode<keyT, valT> *pSor;
     pSor = getMax(node->l);
     fixNeeded = pSor->black;
@@ -643,19 +661,20 @@ del(RBNode<keyT, valT> *node) {
     pSor->r = node->r;
     pSor->r->p = pSor;
     pSor->black = node->black;
-  }
-  if (fixNeeded) fixDel(nxt, rent);
+  } if (fixNeeded) fixDel(nxt, rent);
 }
 
   // Fixes Parent Pointers During Del()
 template <typename keyT, typename valT>
 void RBTree<keyT, valT>::
 fixPtr(RBNode<keyT, valT> *node, RBNode<keyT, valT> *nxt) {
+    // if node is root
   if (!node->p)
     root = nxt;
   else if (node->lChild())
     node->p->l = nxt;
   else node->p->r = nxt;
+    // fix rent pointer
   if (nxt) nxt->p = node->p;
 }
 
@@ -737,8 +756,10 @@ fixDel(RBNode<keyT, valT> *node, RBNode<keyT, valT> *rent) {
   while (node != root &&
   (!node || node->black)) {
     if (node == rent->l) {
+        // node is left child
       sib = rent->r;
       if (sib->red()) {
+          // red sibling
         sib->black = 1;
         rent->black = 0;
         rotateL(rent);
@@ -746,11 +767,13 @@ fixDel(RBNode<keyT, valT> *node, RBNode<keyT, valT> *rent) {
       }
       if ((!sib->l || sib->l->black)
       && (!sib->r || sib->r->black)) {
+          // l & r child of sibling are black
         sib->black = 0;
         node = rent;
         rent = node->p;
       } else {
         if (!sib->r || sib->r->black) {
+            // r child of sibling is black
           if (sib->l) sib->l->black = 1;
           sib->black = 0;
           rotateR(sib);
@@ -763,8 +786,10 @@ fixDel(RBNode<keyT, valT> *node, RBNode<keyT, valT> *rent) {
         node = root;
       }
     } else {
+        // node is right child
       sib = rent->l;
       if (sib->red()) {
+          // red sibling
         sib->black = 1;
         rent->black = 0;
         rotateR(rent);
@@ -772,11 +797,13 @@ fixDel(RBNode<keyT, valT> *node, RBNode<keyT, valT> *rent) {
       }
       if ((!sib->r || sib->r->black)
       && (!sib->l || sib->l->black)) {
+          // l & r child of sibling are black
         sib->black = 0;
         node = rent;
         rent = node->p;
       } else {
         if (!sib->l || sib->l->black) {
+            // l child of sibling is black
           if (sib->r) sib->r->black = 1;
           sib->black = 0;
           rotateL(sib);
