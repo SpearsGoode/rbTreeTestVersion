@@ -144,9 +144,6 @@ class RBTree {
   void del(                     // test
     RBNode<keyT, valT>*
   );
-  RBNode<keyT, valT> *delOld(   // old
-    RBNode<keyT, valT>*
-  );
   void fixPtr(                 // test
     RBNode<keyT, valT>*,
     RBNode<keyT, valT>*
@@ -155,10 +152,6 @@ class RBTree {
     RBNode<keyT, valT>*
   );
   void fixDel(                  // test
-    RBNode<keyT, valT>*,
-    RBNode<keyT, valT>*
-  );
-  void fixDelOld(               // old
     RBNode<keyT, valT>*,
     RBNode<keyT, valT>*
   );
@@ -177,7 +170,6 @@ public:
   valT *search(keyT);           // working
   void insert(keyT, valT);      // working
   int remove(keyT);             // test
-  int removeOld(keyT);          // old
   int rank(keyT);               // too slow
   keyT select(int);             // too slow
   keyT *successor(keyT);        // working
@@ -265,41 +257,6 @@ insert(keyT k, valT v) {
     // fix if needed
   if (node->p->red())
     fixAdd(node);
-}
-
-  // Remove Node @ Key Location
-template <typename keyT, typename valT>
-int RBTree<keyT, valT>::
-removeOld(keyT k) {
-    // return 0 if tree is empty
-  if (!count) return 0;
-    // find node
-  RBNode<keyT, valT> *node;
-  node = find(root, k);
-    // return 0 if it was not found
-  if (!node) return 0;
-    // return 1 if only root remains
-  --count;
-  if (!count) return 1;
-    // set parent/color of node to be deleted
-  int pColor = node->black;
-  RBNode<keyT, valT> *rent;
-  if (!node->r || !node->l) {
-    rent = node->p;
-    pColor = node->black;
-  } else {
-    rent = getMin(node->r);
-    pColor = rent->black;
-    rent = rent->p;
-  }
-    // delete node
-  node = delOld(node);
-    // return 1 if node is black
-  if ((node && node->black != 2)
-  || !pColor)
-    return 1;
-  fixDelOld(node, rent);
-  return 1;
 }
 
 // Remove Node @ Key Location
@@ -619,40 +576,6 @@ add(RBNode<keyT, valT> *node, RBNode<keyT, valT> *tree) {
   } return tree;
 }
 
-  // Delete Node @ key
-template <typename keyT, typename valT>
-RBNode<keyT, valT> *RBTree<keyT, valT>::
-delOld(RBNode<keyT, valT> *node) {
-  cout << "deleting " << node->key << endl;
-  RBNode<keyT, valT> *nxt;
-  if (node->leaf()) {
-    cout << "node->leaf()" << endl;
-    nxt = nullptr;
-    fixPtr(node, nxt);
-    delete node;
-    return nxt;
-  }
-  if (!node->r) {
-    nxt = node->l;
-    nxt->black += node->black;
-    fixPtr(node, nxt);
-    delete node;
-    return nxt;
-  }
-  if (!node->l) {
-    nxt = node->r;
-    nxt->black += node->black;
-    fixPtr(node, nxt);
-    delete node;
-    return nxt;
-  }
-  cout << "fSuccessor" << endl;
-  nxt = getMin(node->r);
-  node->key = nxt->key;
-  node->val = nxt->val;
-  return del(nxt);
-}
-
 // Delete Node @ key
 template <typename keyT, typename valT>
 void RBTree<keyT, valT>::
@@ -772,120 +695,6 @@ fixAdd(RBNode<keyT, valT> *node) {
         p->black = g->black;
         g->black = t;
         n = p;
-      }
-    }
-  } root->black = 1;
-}
-
-  // Fixes Any Violations Del() Created
-template <typename keyT, typename valT>
-void RBTree<keyT, valT>::
-fixDelOld(RBNode<keyT, valT> *node, RBNode<keyT, valT> *rent) {
-  cout << "fixDel()" << endl;                 //TEST TEST
-  RBNode<keyT, valT> *sib;
-  sib = nullptr;
-  bool dBlack = true;
-
-  while (((!node && dBlack)
-  || (node && node->black == 2))
-  && node != root) {
-    cout << " in loop" << endl;
-
-//test v
-    if (node) {
-      cout << "------>node->key: " << node->key << endl;
-    } else cout << "------>!node" << endl;
-//test ^
-
-    if (node)
-      rent = node->p;
-
-//test v
-      if (rent) {
-        cout << "------>rent->key: " << rent->key << endl;
-      } else cout << "------>!rent" << endl;
-//test ^
-
-    if (node == rent->l) {
-      cout << "  sib right child" << endl;
-      sib = rent->r;
-
-//test v
-      if (sib) {
-        cout << "------>sib->key: " << sib->key << endl;
-      } else cout << "------>!sib" << endl;
-//test ^
-
-      if (!sib->black) {
-        cout << "   sib red" << endl;
-        sib->black = 1;
-        rent->black = 0;
-        rotateL(rent);
-      } else {
-        cout << "   sib black" << endl;
-        if ((!sib->l || (sib->l && sib->l->black))
-        && (!sib->r || (sib->r && sib->r->black))) {
-          cout << "    no red children" << endl;
-          sib->black = 0;
-          if (rent->black == 0)
-            rent->black = 1;
-          else
-            rent->black = 2;
-          node = rent;
-        } else {
-          if (!sib->r || (sib->r && sib->r->black)) {
-              cout << "     sib right child black" << endl;
-            if (sib->l)
-              sib->l->black = 1;
-            sib->black = 0;
-            rotateR(sib);
-            sib = rent->r;
-          }
-          cout << "     sib left child black" << endl;
-          sib->black = rent->black;
-          rent->black = 1;
-          if (sib->r)
-            sib->r->black = 1;
-          rotateL(rent);
-          break;
-        }
-      }
-    } else {
-      cout << "  sib left child" << endl;
-      sib = rent->l;
-      if (!sib->black) {
-        cout << "   sib red" << endl;
-        sib->black = 1;
-        rent->black = 0;
-        rotateR(rent);
-      } else {
-        cout << "   sib black" << endl;
-        if ((!sib->l || (sib->l && sib->l->black))
-        && (!sib->r || (sib->r && sib->r->black))) {
-          cout << "    no red children" << endl;
-          sib->black = 0;
-          if (rent->black == 0)
-            rent->black = 1;
-          else
-            rent->black = 2;
-          node = rent;
-        } else {
-          if (!sib->l ||(sib->l && sib->l->black)) {
-              cout << "     sib left child black" << endl;
-            if (sib->r)
-              sib->r->black = 1;
-            sib->black = 0;
-            rotateL(sib);
-            sib = rent->l;
-          }
-          cout << "     sib right child black" << endl;
-          sib->black = rent->black;
-          rent->black = 1;
-          if (sib->l)
-            sib->l->black = 1;
-          rotateR(rent);
-          break;
-        }
       }
     }
   } root->black = 1;

@@ -58,7 +58,7 @@ int main(){
     RBTree<int,int> X;
 	for (int i=1;i<1001000;i++) X.insert(i,i);
 	for (int i=1;i<1001000;i++) {
-		// if (i % 10000 == 0) cout << "i: " << i << endl;
+		if (i % 10000 == 0) cout << "i: " << i << endl;
 		// if(X.rank(i) != i) cout << "Rank error" << endl;
 		// if(X.select(i) != i) cout << "Select error" << endl;
 		if(*(X.search(i)) != i) cout << "Search error" << endl;
