@@ -19,9 +19,29 @@ using namespace std;
 
 int main(int argc, char const *argv[]) {
 
-  cout << "Starting RBTreeTest" << endl;
-  cout << "==========================\n" << endl;
-  cout << "test set: index: key | val" << endl;
+  RBTree<int,int> X;
+	for (int i=102;i>=0;i--)
+    X.insert(i,102-i);
+
+  RBTree<int,int> Y = X;
+  for (int i=0; i < 50; i++){
+  	X.rank(i);
+  	X.remove(i);
+  }
+
+
+  cout << "\noutput: ";
+  Y.preorder();
+	cout << "expect: 71 55 39 23 15 11 7 5 3 1 0 2 4 6 9 8 10 13 12 14 19 17 16 18 21 20 22 31 27 25 24 26 29 28 30 35 33 32 34 37 36 38 47 43 41 40 42 45 44 46 51 49 48 50 53 52 54 63 59 57 56 58 61 60 62 67 65 64 66 69 68 70 87 79 75 73 72 74 77 76 78 83 81 80 82 85 84 86 95 91 89 88 90 93 92 94 99 97 96 98 101 100 102" << endl;
+
+  cout << "\noutput: ";
+  Y.postorder();
+	cout << "expect: 0 2 1 4 3 6 5 8 10 9 7 12 14 13 11 16 18 17 20 22 21 19 15 24 26 25 28 30 29 27 32 34 33 36 38 37 35 31 23 40 42 41 44 46 45 43 48 50 49 52 54 53 51 47 39 56 58 57 60 62 61 59 64 66 65 68 70 69 67 63 55 72 74 73 76 78 77 75 80 82 81 84 86 85 83 79 88 90 89 92 94 93 91 96 98 97 100 102 101 99 95 87 71" << endl;
+  
+
+  // cout << "Starting RBTreeTest" << endl;
+  // cout << "==========================\n" << endl;
+  // cout << "test set: index: key | val" << endl;
   int K0[30];
   string V0[30] = {
     "clown", "car", "scuba", "donkey",
@@ -38,9 +58,10 @@ int main(int argc, char const *argv[]) {
     uniform_int_distribution<>
     distrib(1000,9999);
     K0[i] = distrib(gen);
-    if (i < 10) cout << 0;
-    cout << i << ": [" << K0[i] << " | " << V0[i] << "]" <<  endl;
-  } cout << "==========================\n" << endl;
+    // if (i < 10) cout << 0;
+    // cout << i << ": [" << K0[i] << " | " << V0[i] << "]" <<  endl;
+  }
+  // cout << "==========================\n" << endl;
 
   RBTree<int, string> tree0(K0, V0, 30);
 
@@ -89,8 +110,9 @@ int main(int argc, char const *argv[]) {
     uniform_int_distribution<>
     distrib(1000,9999);
     K1[i] = distrib(gen);
-    cout << i+15 << ": [" << K1[i] << " | " << V1[i] << "]" <<  endl;
-  } cout << "==========================\n" << endl;
+    // cout << i+30 << ": [" << K1[i] << " | " << V1[i] << "]" <<  endl;
+  }
+  // cout << "==========================\n" << endl;
 
   for (int i = 0; i < 30; i++)
     tree1.insert(K1[i], V1[i]);
@@ -198,22 +220,30 @@ int main(int argc, char const *argv[]) {
 
   // tree1.printk(5);
 
-  tree1.view(tree1.getroot(), "", true);
+  // tree1.view(tree1.getroot(), "", true);
 
-  for (int i = 0; i < 30; i++) {
+  for (int i = 0; i < 9; i++) {
     uniform_int_distribution<>
     distrib(0,14);
     int tmp = distrib(gen);
-    cout << "results:\n" << tree1.remove(K0[tmp]) << endl;
-    // tree1.view(tree1.getroot(), "", true);
-    cout << "----\n" << endl;
-    cout << "results:\n" << tree1.remove(K1[tmp]) << endl;
-    // tree1.view(tree1.getroot(), "", true);
-    cout << "----\n" << endl;
+    if (tree1.remove(K0[tmp])) {
+      // cout << "   ---> deleted " << K0[tmp] << endl;
+      // tree1.view(tree1.getroot(), "", true);
+    }
+    if (tree1.remove(K1[tmp])) {
+      // cout << "   ---> deleted " << K1[tmp] << endl;
+      // tree1.view(tree1.getroot(), "", true);
+    }
+    // cout << "results:\n" << tree1.remove(K0[tmp]) << endl;
+
+    // cout << "----\n" << endl;
+    // cout << "results:\n" << tree1.remove(K1[tmp]) << endl;
+
+    // cout << "----\n" << endl;
 
   }
-  tree1.view(tree1.getroot(), "", true);
-  cout << "==========================\n" << endl;
+  // tree1.view(tree1.getroot(), "", true);
+  // cout << "==========================\n" << endl;
 
   // cout << "key to delete: " << endl;
   // int sel;

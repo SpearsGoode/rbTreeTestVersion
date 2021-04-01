@@ -30,12 +30,14 @@ struct RBNode {
   RBNode* l;
   RBNode* r;
   int black;
-  RBNode();           // working
-  RBNode(keyT, valT); // working
-  bool leaf();        // working
-  bool red();         // working
-  bool rChild();      // test
-  bool lChild();      // test
+  int size;
+  RBNode();
+  RBNode(keyT, valT);
+  bool leaf();
+  bool red();
+  bool rChild();
+  bool lChild();
+  void setSize();
 };
 
 
@@ -44,12 +46,13 @@ struct RBNode {
  /* // RBNode Public Functions /// RBNode Public Functions // */
 /* //=====================================================// */
 
-  //RBNode Default Constructor
+  //RBNode Default Constructor [for root node]
 template <typename keyT, typename valT>
 RBNode<keyT, valT>::
 RBNode() {
   p = l = r = nullptr;
-  black = 0;
+  black = 1;
+  size = 0;
 }
 
   //RBNode Key/Val Constructor
@@ -59,6 +62,7 @@ RBNode(keyT k, valT v) {
   p = l = r = nullptr;
   key = k; val = v;
   black = 0;
+  size = 1;
 }
 
   // Returns True If Leaf Node
@@ -81,19 +85,30 @@ red() {
   // Returns True If Right Child
 template <typename keyT, typename valT>
 bool RBNode<keyT, valT>::
-rChild()  {
+rChild() {
   if (this->p->r == this)
     return true;
   else return false;
 }
 
-// Returns True If Left Child
+  // Returns True If Left Child
 template <typename keyT, typename valT>
 bool RBNode<keyT, valT>::
-lChild()  {
+lChild() {
   if (this->p->l == this)
     return true;
   else return false;
+}
+
+  // Sets Node Size
+template <typename keyT, typename valT>
+void RBNode<keyT, valT>::
+setSize() {
+  this->size = 1;
+  if (this->r)
+    this->size += this->r->size;
+  if (this->l)
+    this->size += this->l->size;
 }
 
 
@@ -105,80 +120,85 @@ lChild()  {
 template <typename keyT, typename valT>
 class RBTree {
   struct RBNode<keyT, valT> *root;
-  int count;
-  void mkRoot();                // working
-  RBNode<keyT, valT> *getMin(   // working
+  void mkRoot();
+  RBNode<keyT, valT> *getMin(
     RBNode<keyT, valT> *
   );
-  RBNode<keyT, valT> *getMax(   // working
+  RBNode<keyT, valT> *getMax(
     RBNode<keyT, valT> *
   );
-  RBNode<keyT, valT> *up1(      // working
+  RBNode<keyT, valT> *up1(
     RBNode<keyT, valT> *
   );
-  RBNode<keyT, valT> *dn1(      // working
+  RBNode<keyT, valT> *dn1(
     RBNode<keyT, valT> *
   );
-  void trav(char,               // working
+  void trav(char,
     RBNode<keyT, valT>*
   );
-  void trav(int&,               // working
+  void trav(int&,
     RBNode<keyT, valT>*
   );
-  void clone(                   // working
+  void clone(
     RBNode<keyT, valT>*
   );
-  void destroy(                 // working
+  void destroy(
     RBNode<keyT, valT>*
   );
-  RBNode<keyT, valT> *find(     // working
+  RBNode<keyT, valT> *find(
     RBNode<keyT, valT>*, keyT
   );
-  int tally(bool*,              // working
-    RBNode<keyT, valT>*, keyT
+  RBNode<keyT, valT> *dex(        // test
+    RBNode<keyT, valT>*, int
   );
-  RBNode<keyT, valT> *add(      // working
+  int tally(                      // test
+    RBNode<keyT, valT>*
+  );
+  RBNode<keyT, valT> *add(
     RBNode<keyT, valT>*,
     RBNode<keyT, valT>*
   );
-  void del(                     // test
+  void del(
     RBNode<keyT, valT>*
   );
-  void fixPtr(                 // test
+  void fixPtr(
     RBNode<keyT, valT>*,
     RBNode<keyT, valT>*
   );
-  void fixAdd(                  // working
+  void fixSize(
     RBNode<keyT, valT>*
   );
-  void fixDel(                  // test
+  void fixAdd(
+    RBNode<keyT, valT>*
+  );
+  void fixDel(
     RBNode<keyT, valT>*,
     RBNode<keyT, valT>*
   );
-  void rotateL(                 // working
+  void rotateL(
     RBNode<keyT, valT>*
   );
-  void rotateR(                 // working
+  void rotateR(
     RBNode<keyT, valT>*
   );
 public:
-  RBTree() {mkRoot();}          // working
-  RBTree(keyT*, valT*, int);    // working
-  RBTree(RBTree&);              // working
-  ~RBTree() {destroy(root);}    // working
-  RBTree& operator=(RBTree);    // working
-  valT *search(keyT);           // working
-  void insert(keyT, valT);      // working
-  int remove(keyT);             // test
-  int rank(keyT);               // too slow
-  keyT select(int);             // too slow
-  keyT *successor(keyT);        // working
-  keyT *predecessor(keyT);      // working
-  int size() {return count;}    // working
-  void preorder();              // working
-  void inorder();               // working
-  void postorder();             // working
-  void printk(int);             // working
+  RBTree() {mkRoot();}
+  RBTree(keyT*, valT*, int);
+  RBTree(RBTree&);                // improve
+  ~RBTree() {destroy(root);}
+  RBTree& operator=(RBTree);      // improve
+  valT *search(keyT);
+  void insert(keyT, valT);
+  int remove(keyT);
+  int rank(keyT);                 // test
+  keyT select(int);               // test
+  keyT *successor(keyT);
+  keyT *predecessor(keyT);
+  int size() {return root->size;}
+  void preorder();
+  void inorder();
+  void postorder();
+  void printk(int);
 
 // TESTING TESTING TESTING
   void view(                        // REMOVE ME !!!!!!!
@@ -240,20 +260,17 @@ template <typename keyT, typename valT>
 void RBTree<keyT, valT>::
 insert(keyT k, valT v) {
     // check if empty
-  if (++count == 1) {
+  if (++root->size == 1) {
       // add key/val to root
     root->key = k;
     root->val = v;
-    // cout << "[" << k << " | " << v << "] added" << endl;    // TEST
     return;
   }
     // create new node
   struct RBNode<keyT, valT> *node
   = new RBNode<keyT, valT>(k, v);
     // add node to tree
-  RBNode<keyT, valT> *tree = root;
-  root = add(node, tree);
-  // cout << "[" << k << " | " << v << "] added" << endl;      // TEST
+  root = add(node, root);
     // fix if needed
   if (node->p->red())
     fixAdd(node);
@@ -264,7 +281,7 @@ template <typename keyT, typename valT>
 int RBTree<keyT, valT>::
 remove(keyT k) {
     // return 0 if tree is empty
-  if (!count) return 0;
+  if (!root->size) return 0;
 
     // find node
   RBNode<keyT, valT> *node;
@@ -272,11 +289,11 @@ remove(keyT k) {
     // return 0 if it was not found
   if (!node) return 0;
     // otherwise decrease tree size
-  else --count;
+  else --root->size;
 
     // return 1 if only root remains
-    //   [will be replaced later]
-  if (!count) return 1;
+    //   [key/val replaced later]
+  if (!root->size) return 1;
 
     // delete node
   del(node);
@@ -287,36 +304,21 @@ remove(keyT k) {
 template <typename keyT, typename valT>
 int RBTree<keyT, valT>::
 rank(keyT k) {
-  int i;
-  bool found = false;
-  bool *f = &found;
-  if (k == root->key) {
-    i = 1; *f=true;
-    if (root->l)
-      i += tally(f, root->l, k);
-  }
-  if (k < root->key) {
-    i = 0;
-    if (root->l)
-      i += tally(f, root->l, k);
-  }
-  if (k > root->key) {
-    i = count; ++i;
-    if (root->r)
-      i -= tally(f, root->r, k);
-  }
-  if (!found) return 0;
-  else return i;
+  RBNode<keyT, valT> *node;
+  node = find(root, k);
+  if (!node) return 0;
+  else return tally(node);
 }
 
   // Returns Key @ Position
 template <typename keyT, typename valT>
 keyT RBTree<keyT, valT>::
-select(int pos) {
-  RBNode<keyT, valT> *node = getMin(root);
-  for (int i = 1; i < pos; i++) {
-    node = up1(node);
-  } return node->key;
+select(int i) {
+  RBNode<keyT, valT> *node;
+  if (i > root->size)
+    i = root->size;
+  node = dex(root, i);
+  return node->key;
 }
 
   // Returns Successor
@@ -390,8 +392,7 @@ view(RBNode<keyT, valT> *node, string indent, bool end) {
       cout << "L---";
 		  indent += "|   ";
     }
-    cout << node->key << "{" << node->black << "}" << endl;
-    if (node->black == 2) cout << "\n-= LOOK OVER HERE =-\n" << endl;
+    cout << node->key << "{" << node->black << "}[" << node->size << "]" << endl;
 		view(node->l, indent, false);
 	  view(node->r, indent, true);
   }
@@ -416,7 +417,6 @@ void RBTree<keyT, valT>::
 mkRoot() {
   root = new RBNode<keyT, valT>;
   root->black = 1;
-  count = 0;
 }
 
   // Returns Smallest Element
@@ -505,9 +505,9 @@ template <typename keyT, typename valT>
 void RBTree<keyT, valT>::
 clone(RBNode<keyT, valT> *src) {
   if (!src) return;
-  if (src->l != nullptr)
+  if (src->l)
     insert(src->l->key, src->l->val);
-  if (src->r != nullptr)
+  if (src->r)
     insert(src->r->key, src->r->val);
   clone(src->r); clone(src->l);
 }
@@ -539,27 +539,35 @@ find(RBNode<keyT, valT> *node, keyT k) {
   return node;
 }
 
+  // Finds Node @ index
+template <typename keyT, typename valT>
+RBNode<keyT, valT> *RBTree<keyT, valT>::
+dex(RBNode<keyT, valT> *node, int i) {
+  int pos = 1;
+  if (node->l)
+    pos += node->l->size;
+  if (i == pos) return node;
+  else if (i < pos)
+    return dex(node->l, i);
+  else
+    return dex(node->r, i-pos);
+}
+
   // Counts Nodes Recursivly
 template <typename keyT, typename valT>
 int RBTree<keyT, valT>::
-tally(bool *f, RBNode<keyT, valT> *node, keyT k) {
-  int t = 0;
-  if (k == node->key)
-    *f=true;
-  if (k > root->key) {
-    if (k <= node->key) t = 1;
-    if (node->l && k < node->key)
-      t += tally(f, node->l, k);
-    if (node->r)
-      t += tally(f, node->r, k);
-  } else {
-    if (k >= node->key) t = 1;
-    if (node->l)
-      t += tally(f, node->l, k);
-    if (node->r && k > node->key)
-      t += tally(f, node->r, k);
-  }
-  return t;
+tally(RBNode<keyT, valT> *node) {
+  int pos = 1;
+  if (node->l)
+    pos += node->l->size;
+  while (node != root) {
+    if (node->rChild()) {
+      ++pos;
+      if (node->p->l)
+        pos += node->p->l->size;
+    }
+    node = node->p;
+  } return pos;
 }
 
   // Adds Node To Tree
@@ -567,6 +575,7 @@ template <typename keyT, typename valT>
 RBNode<keyT, valT> *RBTree<keyT, valT>::
 add(RBNode<keyT, valT> *node, RBNode<keyT, valT> *tree) {
   if (tree == nullptr) return node;
+  if (tree != root) ++tree->size;
   if (node->key < tree->key) {
     tree->l = add(node, tree->l);
     tree->l->p = tree;
@@ -587,13 +596,16 @@ del(RBNode<keyT, valT> *node) {
   if (!node->l) {
     nxt = node->r;
     rent = node->p;
+    fixSize(rent);
     fixPtr(node, nxt);
   }
   else if (!node->r) {
     nxt = node->l;
     rent = node->p;
+    fixSize(rent);
     fixPtr(node, nxt);
   } else {
+    // cout << "\n     <----- else" << endl;
     RBNode<keyT, valT> *pSor;
     pSor = getMax(node->l);
     fixNeeded = pSor->black;
@@ -602,17 +614,21 @@ del(RBNode<keyT, valT> *node) {
       if (nxt)
         nxt->p = pSor;
       rent = pSor;
+      fixSize(rent);
     } else {
       rent = pSor->p;
+      fixSize(rent);
       fixPtr(pSor, nxt);
       pSor->l = node->l;
       pSor->l->p = pSor;
     }
     fixPtr(node, pSor);
+    pSor->size = node->size;
     pSor->r = node->r;
     pSor->r->p = pSor;
     pSor->black = node->black;
-  } if (fixNeeded) fixDel(nxt, rent);
+  }
+  if (fixNeeded) fixDel(nxt, rent);
 }
 
   // Fixes Parent Pointers During Del()
@@ -625,6 +641,17 @@ fixPtr(RBNode<keyT, valT> *node, RBNode<keyT, valT> *nxt) {
     node->p->l = nxt;
   else node->p->r = nxt;
   if (nxt) nxt->p = node->p;
+}
+
+  // Fixes SubTree Sizes During Del()
+template <typename keyT, typename valT>
+void RBTree<keyT, valT>::
+fixSize(RBNode<keyT, valT> *node) {
+  while (node != root) {
+    --node->size;
+    // cout << " --" << node->key << "->size: " << node->size << endl;
+    node = node->p;
+  }
 }
 
   // Fixes Any Violations Add() Created
@@ -767,7 +794,6 @@ fixDel(RBNode<keyT, valT> *node, RBNode<keyT, valT> *rent) {
 template <typename keyT, typename valT>
 void RBTree<keyT, valT>::
 rotateL(RBNode<keyT, valT> *node) {
-    // cout << "     rotating left" << endl;  //TEST
   RBNode<keyT, valT> *tmp;
   tmp = node->r;
   node->r = tmp->l;
@@ -782,13 +808,14 @@ rotateL(RBNode<keyT, valT> *node) {
   else node->p->r = tmp;
   tmp->l = node;
   node->p = tmp;
+  tmp->size = node->size;
+  node->setSize();
 }
 
   // Rotates Nodes Right
 template <typename keyT, typename valT>
 void RBTree<keyT, valT>::
 rotateR(RBNode<keyT, valT> *node) {
-    // cout << "     rotating right" << endl; ///TEST
   RBNode<keyT, valT> *tmp;
   tmp = node->l;
   node->l = tmp->r;
@@ -803,4 +830,6 @@ rotateR(RBNode<keyT, valT> *node) {
   else node->p->l = tmp;
   tmp->r = node;
   node->p = tmp;
+  tmp->size = node->size;
+  node->setSize();
 }

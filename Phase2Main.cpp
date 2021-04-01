@@ -53,18 +53,13 @@ int main(){
 	cout <<*(T1.predecessor("C"))<<endl;
 	//Should output B
 
-
-
     RBTree<int,int> X;
 	for (int i=1;i<1001000;i++) X.insert(i,i);
 	for (int i=1;i<1001000;i++) {
-		if (i % 10000 == 0) cout << "i: " << i << endl;
-		// if(X.rank(i) != i) cout << "Rank error" << endl;
-		// if(X.select(i) != i) cout << "Select error" << endl;
+		if(X.rank(i) != i) cout << "Rank error" << endl;
+		if(X.select(i) != i) cout << "Select error" << endl;
 		if(*(X.search(i)) != i) cout << "Search error" << endl;
 	}
 	//Should be no output and should take seconds, not minutes
-
-	cout << "Remember to enable test cases" << endl;
 	return 0;
 }
