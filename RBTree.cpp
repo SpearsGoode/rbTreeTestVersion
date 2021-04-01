@@ -119,6 +119,7 @@ lChild() {
 template <typename keyT, typename valT>
 void RBNode<keyT, valT>::
 setSize() {
+    // sum of children->sizes + 1
   this->size = 1;
   if (this->r)
     this->size += this->r->size;
@@ -158,19 +159,16 @@ class RBTree {
     RBNode<keyT, valT>*,
     RBNode<keyT, valT>*
   );
-  void cloneOld(
-    RBNode<keyT, valT>*
-  );
   void destroy(
     RBNode<keyT, valT>*
   );
   RBNode<keyT, valT> *find(
     RBNode<keyT, valT>*, keyT
   );
-  RBNode<keyT, valT> *dex(        // test
+  RBNode<keyT, valT> *dex(
     RBNode<keyT, valT>*, int
   );
-  int tally(                      // test
+  int tally(
     RBNode<keyT, valT>*
   );
   RBNode<keyT, valT> *add(
@@ -209,8 +207,8 @@ public:
   valT *search(keyT);
   void insert(keyT, valT);
   int remove(keyT);
-  int rank(keyT);                 // test
-  keyT select(int);               // test
+  int rank(keyT);
+  keyT select(int);
   keyT *successor(keyT);
   keyT *predecessor(keyT);
   int size() {return root->size;}
@@ -518,18 +516,6 @@ trav(int &i, RBNode<keyT, valT> *node) {
 
   // Recursivly Duplicates RBNodes
 template <typename keyT, typename valT>
-void RBTree<keyT, valT>::
-cloneOld(RBNode<keyT, valT> *src) {
-  if (!src) return;
-  if (src->l)
-    insert(src->l->key, src->l->val);
-  if (src->r)
-    insert(src->r->key, src->r->val);
-  clone(src->r); clone(src->l);
-}
-
-  // Recursivly Duplicates RBNodes
-template <typename keyT, typename valT>
 RBNode<keyT, valT> *RBTree<keyT, valT>::
 clone(RBNode<keyT, valT> *node, RBNode<keyT, valT> *src) {
   node = new RBNode<keyT, valT>(*src);
@@ -549,7 +535,6 @@ template <typename keyT, typename valT>
 void RBTree<keyT, valT>::
 destroy(RBNode<keyT, valT> *node) {
   if (!node) return;
-  // cout << "destroying node: [" << node->key << " | " << node->val << "]" << endl;
   if (node->l != nullptr)
     destroy(node->l);
   if (node->r != nullptr)
@@ -637,7 +622,6 @@ del(RBNode<keyT, valT> *node) {
     fixSize(rent);
     fixPtr(node, nxt);
   } else {
-    // cout << "\n     <----- else" << endl;
     RBNode<keyT, valT> *pSor;
     pSor = getMax(node->l);
     fixNeeded = pSor->black;
@@ -681,7 +665,6 @@ void RBTree<keyT, valT>::
 fixSize(RBNode<keyT, valT> *node) {
   while (node != root) {
     --node->size;
-    // cout << " --" << node->key << "->size: " << node->size << endl;
     node = node->p;
   }
 }
@@ -692,35 +675,28 @@ void RBTree<keyT, valT>::
 fixAdd(RBNode<keyT, valT> *node) {
   RBNode<keyT, valT> *p, *g, *u, *n;
   p = g = u = nullptr; n = node;
-  // cout << " fixing Add()" << endl;                 //TEST
   while (n != root &&
   (n && n->red()) &&
   (n->p && n->p->red())){
     p = n->p; g = p->p;
     if (p->lChild()) {
         // parent is left child
-        // cout << "  parent is left child" << endl;   //TEST
       u = g->r;
       if (u && u->red()) {
           // uncle is red
-          // cout << "   uncle is red" << endl;         //TEST
-          // cout << "     recoloring" << endl;         //TEST
         u->black = 1;
         p->black = 1;
         g->black = 0;
         n = g;
       } else {
           // uncle is black
-          // cout << "   uncle is black" << endl;       //TEST
         if (n->rChild()) {
             // node is right child
-            // cout << "    node is right child" << endl;//TEST
           rotateL(p);
           n = p;
           p = n->p;
         }
         rotateR(g);
-          // cout << "     swaping clors" << endl;       //TEST
         int t = p->black;
         p->black = g->black;
         g->black = t;
@@ -728,28 +704,22 @@ fixAdd(RBNode<keyT, valT> *node) {
       }
     } else {
         // parent is right child
-        // cout << "  parent is right child" << endl;    //TEST
       u = g->l;
       if (u && u->red()) {
           // uncle is red
-          // cout << "   uncle is red" << endl;          //TEST
-          // cout << "     recoloring" << endl;          //TEST
         u->black = 1;
         p->black = 1;
         g->black = 0;
         n = g;
       } else {
           // uncle is black
-          // cout << "   uncle is black" << endl;        //TEST
         if (n->lChild()) {
             // node is left child
-            // cout << "    node is left child" << endl; //TEST
           rotateR(p);
           n = p;
           p = n->p;
         }
         rotateL(g);
-          // cout << "     swaping clors" << endl;       //TEST
         int t = p->black;
         p->black = g->black;
         g->black = t;

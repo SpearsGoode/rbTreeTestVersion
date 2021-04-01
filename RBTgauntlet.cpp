@@ -160,8 +160,14 @@ int main() {
 	searchErr = 0;
 
 	cout << "\n\t____4th Challenge____\n" << endl;
+	cout << "\t Creating Tree With" << endl;
+	cout << "\t  31,313,131 Random" << endl;
+	cout << "\t  Nodes & Tree With" << endl;
+	cout << "\t  Random Number of" << endl;
+	cout << "\t    Random Nodes\n" << endl;
 
 	RBTree<int,double> T4;
+	RBTree<int,double> T5;
 
 	for (int i=31313131; i > 0; i--) {
 		if (i % 3131313 == 0) {
@@ -174,19 +180,58 @@ int main() {
 		uniform_real_distribution<>
 		realDis(0.0001,9999.9999);
 		T4.insert(intDis(gen), realDis(gen));
-		uniform_int_distribution<>
-		distrib(1, 1000000);
-		tmp = distrib(gen);
+		if (intDis(gen) % 13 == 0)
+			T5.insert(intDis(gen), realDis(gen));
 	}
 
-	cout << "\n\t       Hol Up\n\t  it Didn't Crash?\n" << endl;
+	cout << "\n\t   Copying Tree..." << endl;
 
-	if (!totRankErr
-	&& !totSelectErr
-	&& !totSearchErr)
-		yas();
+	T4 = T5;
 
-	//Should be no output and should take seconds, not minutes
+	cout << "\t   Testing Copy...\n" << endl;
+
+	for (int i=0; i < 31313; i++) {
+		if (i % 3131 == 0) {
+			if (i < 31310)
+				cout << "\t    " << i/310 << "% complete" << endl;
+			else cout << "\t        DONE" << endl;
+		}
+
+		uniform_int_distribution<>
+		distrib(10000000, 99999999);
+		tmp = distrib(gen);
+		if(T5.rank(tmp) != T4.rank(tmp)) rankErr++;
+
+		if (T5.search(tmp) && T4.search(tmp)) {
+			if(*(T5.search(tmp)) != *(T4.search(tmp))) searchErr++;
+		} else if(T5.search(tmp) != T4.search(tmp)) searchErr++;
+
+		uniform_int_distribution<>
+		distrib2(1, T4.size());
+		tmp = distrib2(gen);
+		if(T5.select(tmp) != T4.select(tmp)) selectErr++;
+	}
+
+	cout << "\n\t     Hol Up....\n\t  it Didn't Crash?\n" << endl;
+
+	cout << "\n\t ";
+	cout << rankErr << " Rank Errors\n\t ";
+	cout << selectErr << " Select Errors\n\t ";
+	cout << searchErr << " Search Errors\n" << endl;
+
+	totRankErr += rankErr;
+	rankErr = 0;
+	totSelectErr += selectErr;
+	selectErr = 0;
+	totSearchErr += searchErr;
+	searchErr = 0;
+
+	int totErrors = totRankErr + totSelectErr + totSearchErr;
+
+	cout << "\n\t ";
+	cout << totErr << " TOTAL ERRORS\n\t ";
+
+	if (!totErrors) yas();
 
 	return 0;
 }
